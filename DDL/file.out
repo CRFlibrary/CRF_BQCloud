@@ -1,0 +1,1180 @@
+--db: GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL
+CREATE TABLE fnd_flex_values (
+	 flex_value_set_id NUMBER(10,0) NOT NULL
+	,flex_value_id NUMBER(15,0) NOT NULL
+	,flex_value VARCHAR2 (150) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(15,0)
+	,enabled_flag VARCHAR2 (1) NOT NULL
+	,summary_flag VARCHAR2 (1) NOT NULL
+	,start_date_active DATE
+	,end_date_active DATE
+	,parent_flex_value_low VARCHAR2 (60)
+	,parent_flex_value_high VARCHAR2 (60)
+	,structured_hierarchy_level NUMBER(15,0)
+	,hierarchy_level VARCHAR2 (30)
+	,compiled_value_attributes VARCHAR2 (2000)
+	,value_category VARCHAR2 (30)
+	,attribute1 VARCHAR2 (240)
+	,attribute2 VARCHAR2 (240)
+	,attribute3 VARCHAR2 (240)
+	,attribute4 VARCHAR2 (240)
+	,attribute5 VARCHAR2 (240)
+	,attribute6 VARCHAR2 (240)
+	,attribute7 VARCHAR2 (240)
+	,attribute8 VARCHAR2 (240)
+	,attribute9 VARCHAR2 (240)
+	,attribute10 VARCHAR2 (240)
+	,attribute11 VARCHAR2 (240)
+	,attribute12 VARCHAR2 (240)
+	,attribute13 VARCHAR2 (240)
+	,attribute14 VARCHAR2 (240)
+	,attribute15 VARCHAR2 (240)
+	,attribute16 VARCHAR2 (240)
+	,attribute17 VARCHAR2 (240)
+	,attribute18 VARCHAR2 (240)
+	,attribute19 VARCHAR2 (240)
+	,attribute20 VARCHAR2 (240)
+	,attribute21 VARCHAR2 (240)
+	,attribute22 VARCHAR2 (240)
+	,attribute23 VARCHAR2 (240)
+	,attribute24 VARCHAR2 (240)
+	,attribute25 VARCHAR2 (240)
+	,attribute26 VARCHAR2 (240)
+	,attribute27 VARCHAR2 (240)
+	,attribute28 VARCHAR2 (240)
+	,attribute29 VARCHAR2 (240)
+	,attribute30 VARCHAR2 (240)
+	,attribute31 VARCHAR2 (240)
+	,attribute32 VARCHAR2 (240)
+	,attribute33 VARCHAR2 (240)
+	,attribute34 VARCHAR2 (240)
+	,attribute35 VARCHAR2 (240)
+	,attribute36 VARCHAR2 (240)
+	,attribute37 VARCHAR2 (240)
+	,attribute38 VARCHAR2 (240)
+	,attribute39 VARCHAR2 (240)
+	,attribute40 VARCHAR2 (240)
+	,attribute41 VARCHAR2 (240)
+	,attribute42 VARCHAR2 (240)
+	,attribute43 VARCHAR2 (240)
+	,attribute44 VARCHAR2 (240)
+	,attribute45 VARCHAR2 (240)
+	,attribute46 VARCHAR2 (240)
+	,attribute47 VARCHAR2 (240)
+	,attribute48 VARCHAR2 (240)
+	,attribute49 VARCHAR2 (240)
+	,attribute50 VARCHAR2 (240)
+	,security_group_id NUMBER
+	,attribute_sort_order NUMBER(15,0)
+	,zd_edition_name VARCHAR2 (30) DEFAULT 'ORA$BASE' NOT NULL
+	,zd_sync VARCHAR2 (30) DEFAULT 'SYNCED' NOT NULL
+);
+
+CREATE  INDEX FND_FLEX_VALUES_N1 ON FND_FLEX_VALUES (FLEX_VALUE_SET_ID, FLEX_VALUE);
+CREATE  INDEX FND_FLEX_VALUES_N2 ON FND_FLEX_VALUES (FLEX_VALUE_SET_ID, STRUCTURED_HIERARCHY_LEVEL);
+CREATE UNIQUE INDEX FND_FLEX_VALUES_U1 ON FND_FLEX_VALUES (FLEX_VALUE_ID, ZD_EDITION_NAME);
+CREATE UNIQUE INDEX FND_FLEX_VALUES_U2 ON FND_FLEX_VALUES (FLEX_VALUE_SET_ID, PARENT_FLEX_VALUE_LOW, FLEX_VALUE, ZD_EDITION_NAME);
+CREATE TABLE fnd_flex_values_tl (
+	 flex_value_id NUMBER(15,0) NOT NULL
+	,language VARCHAR2 (30) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(10,0)
+	,description VARCHAR2 (240)
+	,source_lang VARCHAR2 (4) NOT NULL
+	,flex_value_meaning VARCHAR2 (150) NOT NULL
+	,security_group_id NUMBER
+	,zd_edition_name VARCHAR2 (30) DEFAULT 'ORA$BASE' NOT NULL
+	,zd_sync VARCHAR2 (30) DEFAULT 'SYNCED' NOT NULL
+);
+
+CREATE  INDEX FND_FLEX_VALUES_TL_F1 ON FND_FLEX_VALUES_TL (UPPER("DESCRIPTION"));
+CREATE  INDEX FND_FLEX_VALUES_TL_N1 ON FND_FLEX_VALUES_TL (DESCRIPTION, LANGUAGE);
+CREATE  INDEX FND_FLEX_VALUES_TL_N2 ON FND_FLEX_VALUES_TL (FLEX_VALUE_MEANING, LANGUAGE);
+CREATE UNIQUE INDEX FND_FLEX_VALUES_TL_U1 ON FND_FLEX_VALUES_TL (FLEX_VALUE_ID, LANGUAGE, ZD_EDITION_NAME);
+CREATE TABLE gl_balances (
+	 ledger_id NUMBER(15,0) NOT NULL
+	,code_combination_id NUMBER(15,0) NOT NULL
+	,currency_code VARCHAR2 (15) NOT NULL
+	,period_name VARCHAR2 (15) NOT NULL
+	,actual_flag VARCHAR2 (1) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,budget_version_id NUMBER(15,0)
+	,encumbrance_type_id NUMBER(15,0)
+	,translated_flag VARCHAR2 (1)
+	,revaluation_status VARCHAR2 (1)
+	,period_type VARCHAR2 (15)
+	,period_year NUMBER(15,0)
+	,period_num NUMBER(15,0)
+	,period_net_dr NUMBER
+	,period_net_cr NUMBER
+	,period_to_date_adb NUMBER
+	,quarter_to_date_dr NUMBER
+	,quarter_to_date_cr NUMBER
+	,quarter_to_date_adb NUMBER
+	,year_to_date_adb NUMBER
+	,project_to_date_dr NUMBER
+	,project_to_date_cr NUMBER
+	,project_to_date_adb NUMBER
+	,begin_balance_dr NUMBER
+	,begin_balance_cr NUMBER
+	,period_net_dr_beq NUMBER
+	,period_net_cr_beq NUMBER
+	,begin_balance_dr_beq NUMBER
+	,begin_balance_cr_beq NUMBER
+	,template_id NUMBER(15,0)
+	,encumbrance_doc_id NUMBER(15,0)
+	,encumbrance_line_num NUMBER(15,0)
+	,quarter_to_date_dr_beq NUMBER
+	,quarter_to_date_cr_beq NUMBER
+	,project_to_date_dr_beq NUMBER
+	,project_to_date_cr_beq NUMBER
+);
+
+CREATE  INDEX GL_BALANCES_N1 ON GL_BALANCES (CODE_COMBINATION_ID, PERIOD_NAME);
+CREATE  INDEX GL_BALANCES_N2 ON GL_BALANCES (PERIOD_NAME);
+CREATE  INDEX GL_BALANCES_N3 ON GL_BALANCES (PERIOD_NUM, PERIOD_YEAR);
+CREATE TABLE gl_budgets (
+	 budget_type VARCHAR2 (15) NOT NULL
+	,budget_name VARCHAR2 (15) NOT NULL
+	,ledger_id NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,status VARCHAR2 (1) NOT NULL
+	,date_created DATE NOT NULL
+	,require_budget_journals_flag VARCHAR2 (1) NOT NULL
+	,creation_date DATE
+	,created_by NUMBER(15,0)
+	,last_update_login NUMBER(15,0)
+	,current_version_id NUMBER(15,0)
+	,latest_opened_year NUMBER(15,0)
+	,first_valid_period_name VARCHAR2 (15)
+	,last_valid_period_name VARCHAR2 (15)
+	,description VARCHAR2 (240)
+	,date_closed DATE
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+);
+
+CREATE UNIQUE INDEX GL_BUDGETS_U1 ON GL_BUDGETS (BUDGET_NAME, BUDGET_TYPE);
+CREATE TABLE gl_budget_types (
+	 budget_type VARCHAR2 (15) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,audit_trail_flag VARCHAR2 (1) NOT NULL
+	,description VARCHAR2 (240)
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+);
+
+CREATE UNIQUE INDEX GL_BUDGET_TYPES_U1 ON GL_BUDGET_TYPES (BUDGET_TYPE);
+CREATE TABLE gl_budget_versions (
+	 budget_version_id NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER NOT NULL
+	,budget_type VARCHAR2 (15) NOT NULL
+	,budget_name VARCHAR2 (15) NOT NULL
+	,version_num VARCHAR2 (15) NOT NULL
+	,status VARCHAR2 (1) NOT NULL
+	,date_opened DATE NOT NULL
+	,creation_date DATE
+	,created_by NUMBER(15,0)
+	,last_update_login NUMBER(15,0)
+	,description VARCHAR2 (240)
+	,date_active DATE
+	,date_archived DATE
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+	,control_budget_version_id NUMBER(15,0)
+	,igi_bud_nyc_flag VARCHAR2 (1)
+);
+
+CREATE  INDEX GL_BUDGET_VERSIONS_N1 ON GL_BUDGET_VERSIONS (BUDGET_NAME, STATUS);
+CREATE UNIQUE INDEX GL_BUDGET_VERSIONS_U1 ON GL_BUDGET_VERSIONS (BUDGET_VERSION_ID);
+CREATE TABLE gl_code_combinations (
+	 code_combination_id NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER NOT NULL
+	,chart_of_accounts_id NUMBER(15,0) NOT NULL
+	,detail_posting_allowed_flag VARCHAR2 (1) NOT NULL
+	,detail_budgeting_allowed_flag VARCHAR2 (1) NOT NULL
+	,account_type VARCHAR2 (1) NOT NULL
+	,enabled_flag VARCHAR2 (1) NOT NULL
+	,summary_flag VARCHAR2 (1) NOT NULL
+	,segment1 VARCHAR2 (25)
+	,segment2 VARCHAR2 (25)
+	,segment3 VARCHAR2 (25)
+	,segment4 VARCHAR2 (25)
+	,segment5 VARCHAR2 (25)
+	,segment6 VARCHAR2 (25)
+	,segment7 VARCHAR2 (25)
+	,segment8 VARCHAR2 (25)
+	,segment9 VARCHAR2 (25)
+	,segment10 VARCHAR2 (25)
+	,segment11 VARCHAR2 (25)
+	,segment12 VARCHAR2 (25)
+	,segment13 VARCHAR2 (25)
+	,segment14 VARCHAR2 (25)
+	,segment15 VARCHAR2 (25)
+	,segment16 VARCHAR2 (25)
+	,segment17 VARCHAR2 (25)
+	,segment18 VARCHAR2 (25)
+	,segment19 VARCHAR2 (25)
+	,segment20 VARCHAR2 (25)
+	,segment21 VARCHAR2 (25)
+	,segment22 VARCHAR2 (25)
+	,segment23 VARCHAR2 (25)
+	,segment24 VARCHAR2 (25)
+	,segment25 VARCHAR2 (25)
+	,segment26 VARCHAR2 (25)
+	,segment27 VARCHAR2 (25)
+	,segment28 VARCHAR2 (25)
+	,segment29 VARCHAR2 (25)
+	,segment30 VARCHAR2 (25)
+	,description VARCHAR2 (240)
+	,template_id NUMBER(15,0)
+	,allocation_create_flag VARCHAR2 (1)
+	,start_date_active DATE
+	,end_date_active DATE
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+	,segment_attribute1 VARCHAR2 (60)
+	,segment_attribute2 VARCHAR2 (60)
+	,segment_attribute3 VARCHAR2 (60)
+	,segment_attribute4 VARCHAR2 (60)
+	,segment_attribute5 VARCHAR2 (60)
+	,segment_attribute6 VARCHAR2 (60)
+	,segment_attribute7 VARCHAR2 (60)
+	,segment_attribute8 VARCHAR2 (60)
+	,segment_attribute9 VARCHAR2 (60)
+	,segment_attribute10 VARCHAR2 (60)
+	,segment_attribute11 VARCHAR2 (60)
+	,segment_attribute12 VARCHAR2 (60)
+	,segment_attribute13 VARCHAR2 (60)
+	,segment_attribute14 VARCHAR2 (60)
+	,segment_attribute15 VARCHAR2 (60)
+	,segment_attribute16 VARCHAR2 (60)
+	,segment_attribute17 VARCHAR2 (60)
+	,segment_attribute18 VARCHAR2 (60)
+	,segment_attribute19 VARCHAR2 (60)
+	,segment_attribute20 VARCHAR2 (60)
+	,segment_attribute21 VARCHAR2 (60)
+	,segment_attribute22 VARCHAR2 (60)
+	,segment_attribute23 VARCHAR2 (60)
+	,segment_attribute24 VARCHAR2 (60)
+	,segment_attribute25 VARCHAR2 (60)
+	,segment_attribute26 VARCHAR2 (60)
+	,segment_attribute27 VARCHAR2 (60)
+	,segment_attribute28 VARCHAR2 (60)
+	,segment_attribute29 VARCHAR2 (60)
+	,segment_attribute30 VARCHAR2 (60)
+	,segment_attribute31 VARCHAR2 (60)
+	,segment_attribute32 VARCHAR2 (60)
+	,segment_attribute33 VARCHAR2 (60)
+	,segment_attribute34 VARCHAR2 (60)
+	,segment_attribute35 VARCHAR2 (60)
+	,segment_attribute36 VARCHAR2 (60)
+	,segment_attribute37 VARCHAR2 (60)
+	,segment_attribute38 VARCHAR2 (60)
+	,segment_attribute39 VARCHAR2 (60)
+	,segment_attribute40 VARCHAR2 (60)
+	,segment_attribute41 VARCHAR2 (60)
+	,segment_attribute42 VARCHAR2 (60)
+	,jgzz_recon_flag VARCHAR2 (1)
+	,jgzz_recon_context VARCHAR2 (30)
+	,reference1 VARCHAR2 (1)
+	,reference2 VARCHAR2 (1)
+	,reference3 VARCHAR2 (25)
+	,reference4 VARCHAR2 (1)
+	,reference5 VARCHAR2 (1)
+	,preserve_flag VARCHAR2 (1)
+	,refresh_flag VARCHAR2 (1)
+	,igi_balanced_budget_flag VARCHAR2 (1)
+	,company_cost_center_org_id NUMBER(15,0)
+	,revaluation_id NUMBER(15,0)
+	,ledger_segment VARCHAR2 (20)
+	,ledger_type_code VARCHAR2 (1)
+	,alternate_code_combination_id NUMBER(15,0)
+);
+
+CREATE  INDEX GL_CODE_COMBINATIONS_N1 ON GL_CODE_COMBINATIONS (SEGMENT1);
+CREATE  INDEX GL_CODE_COMBINATIONS_N10 ON GL_CODE_COMBINATIONS (SEGMENT10);
+CREATE  INDEX GL_CODE_COMBINATIONS_N11 ON GL_CODE_COMBINATIONS (SEGMENT11);
+CREATE  INDEX GL_CODE_COMBINATIONS_N12 ON GL_CODE_COMBINATIONS (SEGMENT12);
+CREATE  INDEX GL_CODE_COMBINATIONS_N2 ON GL_CODE_COMBINATIONS (SEGMENT2);
+CREATE  INDEX GL_CODE_COMBINATIONS_N3 ON GL_CODE_COMBINATIONS (SEGMENT3);
+CREATE  INDEX GL_CODE_COMBINATIONS_N31 ON GL_CODE_COMBINATIONS (TEMPLATE_ID);
+CREATE  INDEX GL_CODE_COMBINATIONS_N4 ON GL_CODE_COMBINATIONS (SEGMENT4);
+CREATE  INDEX GL_CODE_COMBINATIONS_N5 ON GL_CODE_COMBINATIONS (SEGMENT5);
+CREATE  INDEX GL_CODE_COMBINATIONS_N6 ON GL_CODE_COMBINATIONS (SEGMENT6);
+CREATE  INDEX GL_CODE_COMBINATIONS_N7 ON GL_CODE_COMBINATIONS (SEGMENT7);
+CREATE  INDEX GL_CODE_COMBINATIONS_N8 ON GL_CODE_COMBINATIONS (SEGMENT8);
+CREATE  INDEX GL_CODE_COMBINATIONS_N9 ON GL_CODE_COMBINATIONS (SEGMENT9);
+CREATE UNIQUE INDEX GL_CODE_COMBINATIONS_U1 ON GL_CODE_COMBINATIONS (CODE_COMBINATION_ID);
+CREATE TABLE gl_daily_balances (
+	 ledger_id NUMBER(15,0) NOT NULL
+	,code_combination_id NUMBER(15,0) NOT NULL
+	,currency_code VARCHAR2 (15) NOT NULL
+	,currency_type VARCHAR2 (1) NOT NULL
+	,actual_flag VARCHAR2 (1) NOT NULL
+	,period_name VARCHAR2 (15) NOT NULL
+	,period_start_date DATE NOT NULL
+	,period_end_date DATE NOT NULL
+	,quarter_start_date DATE NOT NULL
+	,year_start_date DATE NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(15,0) NOT NULL
+	,converted_from_currency VARCHAR2 (15)
+	,period_type VARCHAR2 (15)
+	,period_year NUMBER(15,0)
+	,period_num NUMBER(15,0)
+	,template_id NUMBER(15,0)
+	,opening_quarter_aggregate NUMBER
+	,opening_year_aggregate NUMBER
+	,period_aggregate1 NUMBER
+	,period_aggregate2 NUMBER
+	,period_aggregate3 NUMBER
+	,period_aggregate4 NUMBER
+	,period_aggregate5 NUMBER
+	,period_aggregate6 NUMBER
+	,period_aggregate7 NUMBER
+	,period_aggregate8 NUMBER
+	,period_aggregate9 NUMBER
+	,period_aggregate10 NUMBER
+	,period_aggregate11 NUMBER
+	,period_aggregate12 NUMBER
+	,period_aggregate13 NUMBER
+	,period_aggregate14 NUMBER
+	,period_aggregate15 NUMBER
+	,period_aggregate16 NUMBER
+	,period_aggregate17 NUMBER
+	,period_aggregate18 NUMBER
+	,period_aggregate19 NUMBER
+	,period_aggregate20 NUMBER
+	,period_aggregate21 NUMBER
+	,period_aggregate22 NUMBER
+	,period_aggregate23 NUMBER
+	,period_aggregate24 NUMBER
+	,period_aggregate25 NUMBER
+	,period_aggregate26 NUMBER
+	,period_aggregate27 NUMBER
+	,period_aggregate28 NUMBER
+	,period_aggregate29 NUMBER
+	,period_aggregate30 NUMBER
+	,period_aggregate31 NUMBER
+	,period_aggregate32 NUMBER
+	,period_aggregate33 NUMBER
+	,period_aggregate34 NUMBER
+	,period_aggregate35 NUMBER
+	,end_of_day1 NUMBER
+	,end_of_day2 NUMBER
+	,end_of_day3 NUMBER
+	,end_of_day4 NUMBER
+	,end_of_day5 NUMBER
+	,end_of_day6 NUMBER
+	,end_of_day7 NUMBER
+	,end_of_day8 NUMBER
+	,end_of_day9 NUMBER
+	,end_of_day10 NUMBER
+	,end_of_day11 NUMBER
+	,end_of_day12 NUMBER
+	,end_of_day13 NUMBER
+	,end_of_day14 NUMBER
+	,end_of_day15 NUMBER
+	,end_of_day16 NUMBER
+	,end_of_day17 NUMBER
+	,end_of_day18 NUMBER
+	,end_of_day19 NUMBER
+	,end_of_day20 NUMBER
+	,end_of_day21 NUMBER
+	,end_of_day22 NUMBER
+	,end_of_day23 NUMBER
+	,end_of_day24 NUMBER
+	,end_of_day25 NUMBER
+	,end_of_day26 NUMBER
+	,end_of_day27 NUMBER
+	,end_of_day28 NUMBER
+	,end_of_day29 NUMBER
+	,end_of_day30 NUMBER
+	,end_of_day31 NUMBER
+	,end_of_day32 NUMBER
+	,end_of_day33 NUMBER
+	,end_of_day34 NUMBER
+	,end_of_day35 NUMBER
+	,quarter_aggregate1 NUMBER
+	,quarter_aggregate2 NUMBER
+	,quarter_aggregate3 NUMBER
+	,quarter_aggregate4 NUMBER
+	,quarter_aggregate5 NUMBER
+	,quarter_aggregate6 NUMBER
+	,quarter_aggregate7 NUMBER
+	,quarter_aggregate8 NUMBER
+	,quarter_aggregate9 NUMBER
+	,quarter_aggregate10 NUMBER
+	,quarter_aggregate11 NUMBER
+	,quarter_aggregate12 NUMBER
+	,quarter_aggregate13 NUMBER
+	,quarter_aggregate14 NUMBER
+	,quarter_aggregate15 NUMBER
+	,quarter_aggregate16 NUMBER
+	,quarter_aggregate17 NUMBER
+	,quarter_aggregate18 NUMBER
+	,quarter_aggregate19 NUMBER
+	,quarter_aggregate20 NUMBER
+	,quarter_aggregate21 NUMBER
+	,quarter_aggregate22 NUMBER
+	,quarter_aggregate23 NUMBER
+	,quarter_aggregate24 NUMBER
+	,quarter_aggregate25 NUMBER
+	,quarter_aggregate26 NUMBER
+	,quarter_aggregate27 NUMBER
+	,quarter_aggregate28 NUMBER
+	,quarter_aggregate29 NUMBER
+	,quarter_aggregate30 NUMBER
+	,quarter_aggregate31 NUMBER
+	,quarter_aggregate32 NUMBER
+	,quarter_aggregate33 NUMBER
+	,quarter_aggregate34 NUMBER
+	,quarter_aggregate35 NUMBER
+	,year_aggregate1 NUMBER
+	,year_aggregate2 NUMBER
+	,year_aggregate3 NUMBER
+	,year_aggregate4 NUMBER
+	,year_aggregate5 NUMBER
+	,year_aggregate6 NUMBER
+	,year_aggregate7 NUMBER
+	,year_aggregate8 NUMBER
+	,year_aggregate9 NUMBER
+	,year_aggregate10 NUMBER
+	,year_aggregate11 NUMBER
+	,year_aggregate12 NUMBER
+	,year_aggregate13 NUMBER
+	,year_aggregate14 NUMBER
+	,year_aggregate15 NUMBER
+	,year_aggregate16 NUMBER
+	,year_aggregate17 NUMBER
+	,year_aggregate18 NUMBER
+	,year_aggregate19 NUMBER
+	,year_aggregate20 NUMBER
+	,year_aggregate21 NUMBER
+	,year_aggregate22 NUMBER
+	,year_aggregate23 NUMBER
+	,year_aggregate24 NUMBER
+	,year_aggregate25 NUMBER
+	,year_aggregate26 NUMBER
+	,year_aggregate27 NUMBER
+	,year_aggregate28 NUMBER
+	,year_aggregate29 NUMBER
+	,year_aggregate30 NUMBER
+	,year_aggregate31 NUMBER
+	,year_aggregate32 NUMBER
+	,year_aggregate33 NUMBER
+	,year_aggregate34 NUMBER
+	,year_aggregate35 NUMBER
+	,opening_period_aggregate NUMBER
+);
+
+CREATE  INDEX GL_DAILY_BALANCES_N1 ON GL_DAILY_BALANCES (CODE_COMBINATION_ID, PERIOD_NAME, CURRENCY_CODE);
+CREATE  INDEX GL_DAILY_BALANCES_N2 ON GL_DAILY_BALANCES (PERIOD_NAME);
+CREATE  INDEX GL_DAILY_BALANCES_N3 ON GL_DAILY_BALANCES (PERIOD_YEAR, PERIOD_NUM);
+CREATE  INDEX GL_DAILY_BALANCES_N4 ON GL_DAILY_BALANCES (TEMPLATE_ID);
+CREATE TABLE gl_daily_rates (
+	 from_currency VARCHAR2 (15) NOT NULL
+	,to_currency VARCHAR2 (15) NOT NULL
+	,conversion_date DATE NOT NULL
+	,conversion_type VARCHAR2 (30) NOT NULL
+	,conversion_rate NUMBER NOT NULL
+	,status_code VARCHAR2 (1) NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(15,0) NOT NULL
+	,context VARCHAR2 (150)
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,attribute11 VARCHAR2 (150)
+	,attribute12 VARCHAR2 (150)
+	,attribute13 VARCHAR2 (150)
+	,attribute14 VARCHAR2 (150)
+	,attribute15 VARCHAR2 (150)
+	,rate_source_code VARCHAR2 (15)
+);
+
+CREATE UNIQUE INDEX GL_DAILY_RATES_U1 ON GL_DAILY_RATES (FROM_CURRENCY, TO_CURRENCY, CONVERSION_DATE, CONVERSION_TYPE);
+CREATE TABLE gl_date_period_map (
+	 period_set_name VARCHAR2 (15) NOT NULL
+	,accounting_date DATE NOT NULL
+	,period_name VARCHAR2 (15) NOT NULL
+	,period_type VARCHAR2 (15) NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(15,0) NOT NULL
+);
+
+CREATE  INDEX GL_DATE_PERIOD_MAP_N1 ON GL_DATE_PERIOD_MAP (PERIOD_SET_NAME, PERIOD_NAME);
+CREATE UNIQUE INDEX GL_DATE_PERIOD_MAP_U1 ON GL_DATE_PERIOD_MAP (PERIOD_SET_NAME, PERIOD_TYPE, ACCOUNTING_DATE, PERIOD_NAME);
+CREATE TABLE gl_je_batches (
+	 je_batch_id NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,set_of_books_id_11i NUMBER(15,0)
+	,name VARCHAR2 (100) NOT NULL
+	,status VARCHAR2 (1) NOT NULL
+	,status_verified VARCHAR2 (1) NOT NULL
+	,actual_flag VARCHAR2 (1) NOT NULL
+	,default_effective_date DATE NOT NULL
+	,budgetary_control_status VARCHAR2 (1) NOT NULL
+	,creation_date DATE
+	,created_by NUMBER(15,0)
+	,last_update_login NUMBER(15,0)
+	,status_reset_flag VARCHAR2 (1)
+	,default_period_name VARCHAR2 (15)
+	,unique_date VARCHAR2 (30)
+	,earliest_postable_date DATE
+	,posted_date DATE
+	,date_created DATE
+	,description VARCHAR2 (240)
+	,control_total NUMBER
+	,running_total_dr NUMBER
+	,running_total_cr NUMBER
+	,running_total_accounted_dr NUMBER
+	,running_total_accounted_cr NUMBER
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+	,packet_id NUMBER(15,0)
+	,ussgl_transaction_code VARCHAR2 (30)
+	,context2 VARCHAR2 (150)
+	,posting_run_id NUMBER(15,0)
+	,request_id NUMBER(15,0)
+	,unreservation_packet_id NUMBER(15,0)
+	,average_journal_flag VARCHAR2 (1) NOT NULL
+	,org_id NUMBER(15,0)
+	,approval_status_code VARCHAR2 (1) NOT NULL
+	,parent_je_batch_id NUMBER(15,0)
+	,posted_by NUMBER(15,0)
+	,chart_of_accounts_id NUMBER(15,0) NOT NULL
+	,period_set_name VARCHAR2 (15) NOT NULL
+	,accounted_period_type VARCHAR2 (15) NOT NULL
+	,group_id NUMBER
+	,approver_employee_id NUMBER(15,0)
+	,global_attribute_category VARCHAR2 (150)
+	,global_attribute1 VARCHAR2 (150)
+	,global_attribute2 VARCHAR2 (150)
+	,global_attribute3 VARCHAR2 (150)
+	,global_attribute4 VARCHAR2 (150)
+	,global_attribute5 VARCHAR2 (150)
+	,global_attribute6 VARCHAR2 (150)
+	,global_attribute7 VARCHAR2 (150)
+	,global_attribute8 VARCHAR2 (150)
+	,global_attribute9 VARCHAR2 (150)
+	,global_attribute10 VARCHAR2 (150)
+	,global_attribute11 VARCHAR2 (150)
+	,global_attribute12 VARCHAR2 (150)
+	,global_attribute13 VARCHAR2 (150)
+	,global_attribute14 VARCHAR2 (150)
+	,global_attribute15 VARCHAR2 (150)
+	,global_attribute16 VARCHAR2 (150)
+	,global_attribute17 VARCHAR2 (150)
+	,global_attribute18 VARCHAR2 (150)
+	,global_attribute19 VARCHAR2 (150)
+	,global_attribute20 VARCHAR2 (150)
+);
+
+CREATE  INDEX GL_JE_BATCHES_N1 ON GL_JE_BATCHES (STATUS);
+CREATE UNIQUE INDEX GL_JE_BATCHES_U1 ON GL_JE_BATCHES (JE_BATCH_ID);
+CREATE UNIQUE INDEX GL_JE_BATCHES_U2 ON GL_JE_BATCHES (NAME, DEFAULT_PERIOD_NAME, CHART_OF_ACCOUNTS_ID, PERIOD_SET_NAME, ACCOUNTED_PERIOD_TYPE);
+CREATE TABLE gl_je_headers (
+	 je_header_id NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,ledger_id NUMBER(15,0) NOT NULL
+	,je_category VARCHAR2 (25) NOT NULL
+	,je_source VARCHAR2 (25) NOT NULL
+	,period_name VARCHAR2 (15) NOT NULL
+	,name VARCHAR2 (100) NOT NULL
+	,currency_code VARCHAR2 (15) NOT NULL
+	,status VARCHAR2 (1) NOT NULL
+	,date_created DATE NOT NULL
+	,accrual_rev_flag VARCHAR2 (1) NOT NULL
+	,multi_bal_seg_flag VARCHAR2 (1) NOT NULL
+	,actual_flag VARCHAR2 (1) NOT NULL
+	,default_effective_date DATE NOT NULL
+	,conversion_flag VARCHAR2 (1)
+	,creation_date DATE
+	,created_by NUMBER(15,0)
+	,last_update_login NUMBER(15,0)
+	,encumbrance_type_id NUMBER(15,0)
+	,budget_version_id NUMBER(15,0)
+	,balanced_je_flag VARCHAR2 (1)
+	,balancing_segment_value VARCHAR2 (25)
+	,je_batch_id NUMBER(15,0)
+	,from_recurring_header_id NUMBER(15,0)
+	,unique_date VARCHAR2 (30)
+	,earliest_postable_date DATE
+	,posted_date DATE
+	,accrual_rev_effective_date DATE
+	,accrual_rev_period_name VARCHAR2 (15)
+	,accrual_rev_status VARCHAR2 (1)
+	,accrual_rev_je_header_id NUMBER(15,0)
+	,accrual_rev_change_sign_flag VARCHAR2 (1) NOT NULL
+	,description VARCHAR2 (240)
+	,control_total NUMBER
+	,running_total_dr NUMBER
+	,running_total_cr NUMBER
+	,running_total_accounted_dr NUMBER
+	,running_total_accounted_cr NUMBER
+	,currency_conversion_rate NUMBER
+	,currency_conversion_type VARCHAR2 (30)
+	,currency_conversion_date DATE
+	,external_reference VARCHAR2 (80)
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+	,ussgl_transaction_code VARCHAR2 (30)
+	,context2 VARCHAR2 (150)
+	,doc_sequence_id NUMBER
+	,doc_sequence_value NUMBER
+	,jgzz_recon_context VARCHAR2 (30)
+	,jgzz_recon_ref VARCHAR2 (240)
+	,global_attribute_category VARCHAR2 (30)
+	,global_attribute1 VARCHAR2 (150)
+	,global_attribute2 VARCHAR2 (150)
+	,global_attribute3 VARCHAR2 (150)
+	,global_attribute4 VARCHAR2 (150)
+	,global_attribute5 VARCHAR2 (150)
+	,global_attribute6 VARCHAR2 (150)
+	,global_attribute7 VARCHAR2 (150)
+	,global_attribute8 VARCHAR2 (150)
+	,global_attribute9 VARCHAR2 (150)
+	,global_attribute10 VARCHAR2 (150)
+	,tax_status_code VARCHAR2 (1) NOT NULL
+	,parent_je_header_id NUMBER(15,0)
+	,reversed_je_header_id NUMBER(15,0)
+	,originating_bal_seg_value VARCHAR2 (25)
+	,intercompany_mode NUMBER(15,0)
+	,dr_bal_seg_value VARCHAR2 (25)
+	,cr_bal_seg_value VARCHAR2 (25)
+	,reference_date DATE
+	,local_doc_sequence_id NUMBER
+	,local_doc_sequence_value NUMBER
+	,display_alc_journal_flag VARCHAR2 (1)
+	,je_from_sla_flag VARCHAR2 (1)
+	,posting_acct_seq_version_id NUMBER
+	,posting_acct_seq_assign_id NUMBER
+	,posting_acct_seq_value NUMBER
+	,close_acct_seq_version_id NUMBER
+	,close_acct_seq_assign_id NUMBER
+	,close_acct_seq_value NUMBER
+);
+
+CREATE  INDEX GL_JE_HEADERS_N1 ON GL_JE_HEADERS (JE_BATCH_ID);
+CREATE  INDEX GL_JE_HEADERS_N2 ON GL_JE_HEADERS (PERIOD_NAME, JE_CATEGORY);
+CREATE  INDEX GL_JE_HEADERS_N3 ON GL_JE_HEADERS (DOC_SEQUENCE_VALUE, DOC_SEQUENCE_ID);
+CREATE  INDEX GL_JE_HEADERS_N4 ON GL_JE_HEADERS (PARENT_JE_HEADER_ID);
+CREATE UNIQUE INDEX GL_JE_HEADERS_U1 ON GL_JE_HEADERS (JE_HEADER_ID);
+CREATE UNIQUE INDEX GL_JE_HEADERS_U2 ON GL_JE_HEADERS (NAME, JE_BATCH_ID);
+CREATE TABLE gl_je_lines (
+	 je_header_id NUMBER(15,0) NOT NULL
+	,je_line_num NUMBER(15,0) NOT NULL
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,ledger_id NUMBER(15,0) NOT NULL
+	,code_combination_id NUMBER(15,0) NOT NULL
+	,period_name VARCHAR2 (15) NOT NULL
+	,effective_date DATE NOT NULL
+	,status VARCHAR2 (1) NOT NULL
+	,creation_date DATE
+	,created_by NUMBER(15,0)
+	,last_update_login NUMBER(15,0)
+	,entered_dr NUMBER
+	,entered_cr NUMBER
+	,accounted_dr NUMBER
+	,accounted_cr NUMBER
+	,description VARCHAR2 (240)
+	,reference_1 VARCHAR2 (240)
+	,reference_2 VARCHAR2 (240)
+	,reference_3 VARCHAR2 (240)
+	,reference_4 VARCHAR2 (240)
+	,reference_5 VARCHAR2 (240)
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,attribute11 VARCHAR2 (150)
+	,attribute12 VARCHAR2 (150)
+	,attribute13 VARCHAR2 (150)
+	,attribute14 VARCHAR2 (150)
+	,attribute15 VARCHAR2 (150)
+	,attribute16 VARCHAR2 (150)
+	,attribute17 VARCHAR2 (150)
+	,attribute18 VARCHAR2 (150)
+	,attribute19 VARCHAR2 (150)
+	,attribute20 VARCHAR2 (150)
+	,context VARCHAR2 (150)
+	,context2 VARCHAR2 (150)
+	,invoice_date DATE
+	,tax_code VARCHAR2 (15)
+	,invoice_identifier VARCHAR2 (20)
+	,invoice_amount NUMBER
+	,no1 VARCHAR2 (150)
+	,stat_amount NUMBER
+	,ignore_rate_flag VARCHAR2 (1)
+	,context3 VARCHAR2 (150)
+	,ussgl_transaction_code VARCHAR2 (30)
+	,subledger_doc_sequence_id NUMBER
+	,context4 VARCHAR2 (150)
+	,subledger_doc_sequence_value NUMBER
+	,reference_6 VARCHAR2 (240)
+	,reference_7 VARCHAR2 (240)
+	,reference_8 VARCHAR2 (240)
+	,reference_9 VARCHAR2 (240)
+	,reference_10 VARCHAR2 (240)
+	,jgzz_recon_status_11i VARCHAR2 (1)
+	,jgzz_recon_date_11i DATE
+	,jgzz_recon_id_11i NUMBER
+	,jgzz_recon_ref_11i VARCHAR2 (240)
+	,jgzz_recon_context_11i VARCHAR2 (30)
+	,global_attribute_category VARCHAR2 (30)
+	,global_attribute1 VARCHAR2 (150)
+	,global_attribute2 VARCHAR2 (150)
+	,global_attribute3 VARCHAR2 (150)
+	,global_attribute4 VARCHAR2 (150)
+	,global_attribute5 VARCHAR2 (150)
+	,global_attribute6 VARCHAR2 (150)
+	,global_attribute7 VARCHAR2 (150)
+	,global_attribute8 VARCHAR2 (150)
+	,global_attribute9 VARCHAR2 (150)
+	,global_attribute10 VARCHAR2 (150)
+	,taxable_line_flag VARCHAR2 (1)
+	,tax_type_code VARCHAR2 (1)
+	,tax_code_id NUMBER(15,0)
+	,tax_rounding_rule_code VARCHAR2 (1)
+	,amount_includes_tax_flag VARCHAR2 (1)
+	,tax_document_identifier VARCHAR2 (50)
+	,tax_document_date DATE
+	,tax_customer_name VARCHAR2 (240)
+	,tax_customer_reference VARCHAR2 (240)
+	,tax_registration_number VARCHAR2 (50)
+	,tax_line_flag VARCHAR2 (1)
+	,tax_group_id NUMBER(15,0)
+	,line_type_code VARCHAR2 (20)
+	,gl_sl_link_id NUMBER
+	,gl_sl_link_table VARCHAR2 (30)
+	,co_third_party VARCHAR2 (14)
+	,co_processed_flag VARCHAR2 (1)
+);
+
+CREATE  INDEX GL_JE_LINES_N1 ON GL_JE_LINES (CODE_COMBINATION_ID, PERIOD_NAME);
+CREATE  INDEX GL_JE_LINES_N3 ON GL_JE_LINES (SUBLEDGER_DOC_SEQUENCE_VALUE, SUBLEDGER_DOC_SEQUENCE_ID);
+CREATE UNIQUE INDEX GL_JE_LINES_U1 ON GL_JE_LINES (JE_HEADER_ID, JE_LINE_NUM);
+CREATE TABLE gl_ledgers (
+	 ledger_id NUMBER(15,0) NOT NULL
+	,name VARCHAR2 (30) NOT NULL
+	,short_name VARCHAR2 (20) NOT NULL
+	,description VARCHAR2 (240)
+	,ledger_category_code VARCHAR2 (30) NOT NULL
+	,alc_ledger_type_code VARCHAR2 (30) NOT NULL
+	,object_type_code VARCHAR2 (1) NOT NULL
+	,le_ledger_type_code VARCHAR2 (1) NOT NULL
+	,completion_status_code VARCHAR2 (30)
+	,configuration_id NUMBER(15,0)
+	,chart_of_accounts_id NUMBER(15,0) NOT NULL
+	,currency_code VARCHAR2 (15) NOT NULL
+	,period_set_name VARCHAR2 (15) NOT NULL
+	,accounted_period_type VARCHAR2 (15) NOT NULL
+	,first_ledger_period_name VARCHAR2 (15) NOT NULL
+	,ret_earn_code_combination_id NUMBER(15,0) NOT NULL
+	,suspense_allowed_flag VARCHAR2 (1) NOT NULL
+	,allow_intercompany_post_flag VARCHAR2 (1) NOT NULL
+	,track_rounding_imbalance_flag VARCHAR2 (1) NOT NULL
+	,enable_average_balances_flag VARCHAR2 (1) NOT NULL
+	,cum_trans_code_combination_id NUMBER(15,0)
+	,res_encumb_code_combination_id NUMBER(15,0)
+	,net_income_code_combination_id NUMBER(15,0)
+	,rounding_code_combination_id NUMBER(15,0)
+	,enable_budgetary_control_flag VARCHAR2 (1) NOT NULL
+	,require_budget_journals_flag VARCHAR2 (1) NOT NULL
+	,enable_je_approval_flag VARCHAR2 (1) NOT NULL
+	,enable_automatic_tax_flag VARCHAR2 (1) NOT NULL
+	,consolidation_ledger_flag VARCHAR2 (1) NOT NULL
+	,translate_eod_flag VARCHAR2 (1) NOT NULL
+	,translate_qatd_flag VARCHAR2 (1) NOT NULL
+	,translate_yatd_flag VARCHAR2 (1) NOT NULL
+	,transaction_calendar_id NUMBER(15,0)
+	,daily_translation_rate_type VARCHAR2 (30)
+	,automatically_created_flag VARCHAR2 (1) NOT NULL
+	,bal_seg_value_option_code VARCHAR2 (1) NOT NULL
+	,bal_seg_column_name VARCHAR2 (25) NOT NULL
+	,mgt_seg_value_option_code VARCHAR2 (1) NOT NULL
+	,mgt_seg_column_name VARCHAR2 (25)
+	,bal_seg_value_set_id NUMBER(10,0) NOT NULL
+	,mgt_seg_value_set_id NUMBER(10,0)
+	,implicit_access_set_id NUMBER(15,0)
+	,criteria_set_id NUMBER(15,0)
+	,future_enterable_periods_limit NUMBER(15,0) NOT NULL
+	,ledger_attributes VARCHAR2 (2000) NOT NULL
+	,implicit_ledger_set_id NUMBER(15,0)
+	,latest_opened_period_name VARCHAR2 (15)
+	,latest_encumbrance_year NUMBER(15,0)
+	,period_average_rate_type VARCHAR2 (30)
+	,period_end_rate_type VARCHAR2 (30)
+	,budget_period_avg_rate_type VARCHAR2 (30)
+	,budget_period_end_rate_type VARCHAR2 (30)
+	,sla_accounting_method_code VARCHAR2 (30)
+	,sla_accounting_method_type VARCHAR2 (1)
+	,sla_description_language VARCHAR2 (15)
+	,sla_entered_cur_bal_sus_ccid NUMBER(15,0)
+	,sla_sequencing_flag VARCHAR2 (1)
+	,sla_bal_by_ledger_curr_flag VARCHAR2 (1)
+	,sla_ledger_cur_bal_sus_ccid NUMBER(15,0)
+	,enable_secondary_track_flag VARCHAR2 (1)
+	,enable_reval_ss_track_flag VARCHAR2 (1)
+	,last_update_date DATE NOT NULL
+	,last_updated_by NUMBER(15,0) NOT NULL
+	,creation_date DATE NOT NULL
+	,created_by NUMBER(15,0) NOT NULL
+	,last_update_login NUMBER(15,0)
+	,context VARCHAR2 (150)
+	,attribute1 VARCHAR2 (150)
+	,attribute2 VARCHAR2 (150)
+	,attribute3 VARCHAR2 (150)
+	,attribute4 VARCHAR2 (150)
+	,attribute5 VARCHAR2 (150)
+	,attribute6 VARCHAR2 (150)
+	,attribute7 VARCHAR2 (150)
+	,attribute8 VARCHAR2 (150)
+	,attribute9 VARCHAR2 (150)
+	,attribute10 VARCHAR2 (150)
+	,attribute11 VARCHAR2 (150)
+	,attribute12 VARCHAR2 (150)
+	,attribute13 VARCHAR2 (150)
+	,attribute14 VARCHAR2 (150)
+	,attribute15 VARCHAR2 (150)
+	,enable_reconciliation_flag VARCHAR2 (1) NOT NULL
+	,create_je_flag VARCHAR2 (1) NOT NULL
+	,sla_ledger_cash_basis_flag VARCHAR2 (1)
+	,complete_flag VARCHAR2 (1)
+	,commitment_budget_flag VARCHAR2 (1)
+	,net_closing_bal_flag VARCHAR2 (1) NOT NULL
+	,automate_sec_jrnl_rev_flag VARCHAR2 (1)
+);
+
+CREATE  INDEX GL_LEDGERS_N1 ON GL_LEDGERS (CHART_OF_ACCOUNTS_ID, PERIOD_SET_NAME, ACCOUNTED_PERIOD_TYPE);
+CREATE  INDEX GL_LEDGERS_N2 ON GL_LEDGERS (BAL_SEG_VALUE_SET_ID);
+CREATE  INDEX GL_LEDGERS_N3 ON GL_LEDGERS (MGT_SEG_VALUE_SET_ID);
+CREATE UNIQUE INDEX GL_LEDGERS_U1 ON GL_LEDGERS (NAME);
+CREATE UNIQUE INDEX GL_LEDGERS_U2 ON GL_LEDGERS (LEDGER_ID);
+CREATE UNIQUE INDEX GL_LEDGERS_U3 ON GL_LEDGERS (SHORT_NAME);
+
+
+--- indexes ---
+FND_FLEX_VALUES	FND_FLEX_VALUES_N1	NONUNIQUE
+FND_FLEX_VALUES	FND_FLEX_VALUES_N2	NONUNIQUE
+FND_FLEX_VALUES	FND_FLEX_VALUES_U1	UNIQUE
+FND_FLEX_VALUES	FND_FLEX_VALUES_U2	UNIQUE
+FND_FLEX_VALUES_TL	FND_FLEX_VALUES_TL_F1	NONUNIQUE
+FND_FLEX_VALUES_TL	FND_FLEX_VALUES_TL_N1	NONUNIQUE
+FND_FLEX_VALUES_TL	FND_FLEX_VALUES_TL_N2	NONUNIQUE
+FND_FLEX_VALUES_TL	FND_FLEX_VALUES_TL_U1	UNIQUE
+GL_BALANCES	GL_BALANCES_N1	NONUNIQUE
+GL_BALANCES	GL_BALANCES_N2	NONUNIQUE
+GL_BALANCES	GL_BALANCES_N3	NONUNIQUE
+GL_BUDGETS	GL_BUDGETS_U1	UNIQUE
+GL_BUDGET_TYPES	GL_BUDGET_TYPES_U1	UNIQUE
+GL_BUDGET_VERSIONS	GL_BUDGET_VERSIONS_N1	NONUNIQUE
+GL_BUDGET_VERSIONS	GL_BUDGET_VERSIONS_U1	UNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N1	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N10	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N11	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N12	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N2	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N3	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N31	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N4	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N5	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N6	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N7	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N8	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_N9	NONUNIQUE
+GL_CODE_COMBINATIONS	GL_CODE_COMBINATIONS_U1	UNIQUE
+GL_DAILY_BALANCES	GL_DAILY_BALANCES_N1	NONUNIQUE
+GL_DAILY_BALANCES	GL_DAILY_BALANCES_N2	NONUNIQUE
+GL_DAILY_BALANCES	GL_DAILY_BALANCES_N3	NONUNIQUE
+GL_DAILY_BALANCES	GL_DAILY_BALANCES_N4	NONUNIQUE
+GL_DAILY_RATES	GL_DAILY_RATES_U1	UNIQUE
+GL_DATE_PERIOD_MAP	GL_DATE_PERIOD_MAP_N1	NONUNIQUE
+GL_DATE_PERIOD_MAP	GL_DATE_PERIOD_MAP_U1	UNIQUE
+GL_JE_BATCHES	GL_JE_BATCHES_N1	NONUNIQUE
+GL_JE_BATCHES	GL_JE_BATCHES_U1	UNIQUE
+GL_JE_BATCHES	GL_JE_BATCHES_U2	UNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_N1	NONUNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_N2	NONUNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_N3	NONUNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_N4	NONUNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_U1	UNIQUE
+GL_JE_HEADERS	GL_JE_HEADERS_U2	UNIQUE
+GL_JE_LINES	GL_JE_LINES_N1	NONUNIQUE
+GL_JE_LINES	GL_JE_LINES_N3	NONUNIQUE
+GL_JE_LINES	GL_JE_LINES_U1	UNIQUE
+GL_LEDGERS	GL_LEDGERS_N1	NONUNIQUE
+GL_LEDGERS	GL_LEDGERS_N2	NONUNIQUE
+GL_LEDGERS	GL_LEDGERS_N3	NONUNIQUE
+GL_LEDGERS	GL_LEDGERS_U1	UNIQUE
+GL_LEDGERS	GL_LEDGERS_U2	UNIQUE
+GL_LEDGERS	GL_LEDGERS_U3	UNIQUE
+
+
+--- indexes columns ---
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_N1	1	ASC
+FND_FLEX_VALUES	FLEX_VALUE	FND_FLEX_VALUES_N1	2	ASC
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_N2	1	ASC
+FND_FLEX_VALUES	STRUCTURED_HIERARCHY_LEVEL	FND_FLEX_VALUES_N2	2	ASC
+FND_FLEX_VALUES	FLEX_VALUE_ID	FND_FLEX_VALUES_U1	1	ASC
+FND_FLEX_VALUES	ZD_EDITION_NAME	FND_FLEX_VALUES_U1	2	ASC
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_U2	1	ASC
+FND_FLEX_VALUES	PARENT_FLEX_VALUE_LOW	FND_FLEX_VALUES_U2	2	ASC
+FND_FLEX_VALUES	FLEX_VALUE	FND_FLEX_VALUES_U2	3	ASC
+FND_FLEX_VALUES	ZD_EDITION_NAME	FND_FLEX_VALUES_U2	4	ASC
+FND_FLEX_VALUES_TL	SYS_NC00014$	FND_FLEX_VALUES_TL_F1	1	ASC
+FND_FLEX_VALUES_TL	DESCRIPTION	FND_FLEX_VALUES_TL_N1	1	ASC
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_N1	2	ASC
+FND_FLEX_VALUES_TL	FLEX_VALUE_MEANING	FND_FLEX_VALUES_TL_N2	1	ASC
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_N2	2	ASC
+FND_FLEX_VALUES_TL	FLEX_VALUE_ID	FND_FLEX_VALUES_TL_U1	1	ASC
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_U1	2	ASC
+FND_FLEX_VALUES_TL	ZD_EDITION_NAME	FND_FLEX_VALUES_TL_U1	3	ASC
+GL_BALANCES	CODE_COMBINATION_ID	GL_BALANCES_N1	1	ASC
+GL_BALANCES	PERIOD_NAME	GL_BALANCES_N1	2	ASC
+GL_BALANCES	PERIOD_NAME	GL_BALANCES_N2	1	ASC
+GL_BALANCES	PERIOD_NUM	GL_BALANCES_N3	1	ASC
+GL_BALANCES	PERIOD_YEAR	GL_BALANCES_N3	2	ASC
+GL_BUDGETS	BUDGET_NAME	GL_BUDGETS_U1	1	ASC
+GL_BUDGETS	BUDGET_TYPE	GL_BUDGETS_U1	2	ASC
+GL_BUDGET_TYPES	BUDGET_TYPE	GL_BUDGET_TYPES_U1	1	ASC
+GL_BUDGET_VERSIONS	BUDGET_NAME	GL_BUDGET_VERSIONS_N1	1	ASC
+GL_BUDGET_VERSIONS	STATUS	GL_BUDGET_VERSIONS_N1	2	ASC
+GL_BUDGET_VERSIONS	BUDGET_VERSION_ID	GL_BUDGET_VERSIONS_U1	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT1	GL_CODE_COMBINATIONS_N1	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT10	GL_CODE_COMBINATIONS_N10	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT11	GL_CODE_COMBINATIONS_N11	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT12	GL_CODE_COMBINATIONS_N12	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT2	GL_CODE_COMBINATIONS_N2	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT3	GL_CODE_COMBINATIONS_N3	1	ASC
+GL_CODE_COMBINATIONS	TEMPLATE_ID	GL_CODE_COMBINATIONS_N31	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT4	GL_CODE_COMBINATIONS_N4	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT5	GL_CODE_COMBINATIONS_N5	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT6	GL_CODE_COMBINATIONS_N6	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT7	GL_CODE_COMBINATIONS_N7	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT8	GL_CODE_COMBINATIONS_N8	1	ASC
+GL_CODE_COMBINATIONS	SEGMENT9	GL_CODE_COMBINATIONS_N9	1	ASC
+GL_CODE_COMBINATIONS	CODE_COMBINATION_ID	GL_CODE_COMBINATIONS_U1	1	ASC
+GL_DAILY_BALANCES	CODE_COMBINATION_ID	GL_DAILY_BALANCES_N1	1	ASC
+GL_DAILY_BALANCES	PERIOD_NAME	GL_DAILY_BALANCES_N1	2	ASC
+GL_DAILY_BALANCES	CURRENCY_CODE	GL_DAILY_BALANCES_N1	3	ASC
+GL_DAILY_BALANCES	PERIOD_NAME	GL_DAILY_BALANCES_N2	1	ASC
+GL_DAILY_BALANCES	PERIOD_YEAR	GL_DAILY_BALANCES_N3	1	ASC
+GL_DAILY_BALANCES	PERIOD_NUM	GL_DAILY_BALANCES_N3	2	ASC
+GL_DAILY_BALANCES	TEMPLATE_ID	GL_DAILY_BALANCES_N4	1	ASC
+GL_DAILY_RATES	FROM_CURRENCY	GL_DAILY_RATES_U1	1	ASC
+GL_DAILY_RATES	TO_CURRENCY	GL_DAILY_RATES_U1	2	ASC
+GL_DAILY_RATES	CONVERSION_DATE	GL_DAILY_RATES_U1	3	ASC
+GL_DAILY_RATES	CONVERSION_TYPE	GL_DAILY_RATES_U1	4	ASC
+GL_DATE_PERIOD_MAP	PERIOD_SET_NAME	GL_DATE_PERIOD_MAP_N1	1	ASC
+GL_DATE_PERIOD_MAP	PERIOD_NAME	GL_DATE_PERIOD_MAP_N1	2	ASC
+GL_DATE_PERIOD_MAP	PERIOD_SET_NAME	GL_DATE_PERIOD_MAP_U1	1	ASC
+GL_DATE_PERIOD_MAP	PERIOD_TYPE	GL_DATE_PERIOD_MAP_U1	2	ASC
+GL_DATE_PERIOD_MAP	ACCOUNTING_DATE	GL_DATE_PERIOD_MAP_U1	3	ASC
+GL_DATE_PERIOD_MAP	PERIOD_NAME	GL_DATE_PERIOD_MAP_U1	4	ASC
+GL_JE_BATCHES	STATUS	GL_JE_BATCHES_N1	1	ASC
+GL_JE_BATCHES	JE_BATCH_ID	GL_JE_BATCHES_U1	1	ASC
+GL_JE_BATCHES	NAME	GL_JE_BATCHES_U2	1	ASC
+GL_JE_BATCHES	DEFAULT_PERIOD_NAME	GL_JE_BATCHES_U2	2	ASC
+GL_JE_BATCHES	CHART_OF_ACCOUNTS_ID	GL_JE_BATCHES_U2	3	ASC
+GL_JE_BATCHES	PERIOD_SET_NAME	GL_JE_BATCHES_U2	4	ASC
+GL_JE_BATCHES	ACCOUNTED_PERIOD_TYPE	GL_JE_BATCHES_U2	5	ASC
+GL_JE_HEADERS	JE_BATCH_ID	GL_JE_HEADERS_N1	1	ASC
+GL_JE_HEADERS	PERIOD_NAME	GL_JE_HEADERS_N2	1	ASC
+GL_JE_HEADERS	JE_CATEGORY	GL_JE_HEADERS_N2	2	ASC
+GL_JE_HEADERS	DOC_SEQUENCE_VALUE	GL_JE_HEADERS_N3	1	ASC
+GL_JE_HEADERS	DOC_SEQUENCE_ID	GL_JE_HEADERS_N3	2	ASC
+GL_JE_HEADERS	PARENT_JE_HEADER_ID	GL_JE_HEADERS_N4	1	ASC
+GL_JE_HEADERS	JE_HEADER_ID	GL_JE_HEADERS_U1	1	ASC
+GL_JE_HEADERS	NAME	GL_JE_HEADERS_U2	1	ASC
+GL_JE_HEADERS	JE_BATCH_ID	GL_JE_HEADERS_U2	2	ASC
+GL_JE_LINES	CODE_COMBINATION_ID	GL_JE_LINES_N1	1	ASC
+GL_JE_LINES	PERIOD_NAME	GL_JE_LINES_N1	2	ASC
+GL_JE_LINES	SUBLEDGER_DOC_SEQUENCE_VALUE	GL_JE_LINES_N3	1	ASC
+GL_JE_LINES	SUBLEDGER_DOC_SEQUENCE_ID	GL_JE_LINES_N3	2	ASC
+GL_JE_LINES	JE_HEADER_ID	GL_JE_LINES_U1	1	ASC
+GL_JE_LINES	JE_LINE_NUM	GL_JE_LINES_U1	2	ASC
+GL_LEDGERS	CHART_OF_ACCOUNTS_ID	GL_LEDGERS_N1	1	ASC
+GL_LEDGERS	PERIOD_SET_NAME	GL_LEDGERS_N1	2	ASC
+GL_LEDGERS	ACCOUNTED_PERIOD_TYPE	GL_LEDGERS_N1	3	ASC
+GL_LEDGERS	BAL_SEG_VALUE_SET_ID	GL_LEDGERS_N2	1	ASC
+GL_LEDGERS	MGT_SEG_VALUE_SET_ID	GL_LEDGERS_N3	1	ASC
+GL_LEDGERS	NAME	GL_LEDGERS_U1	1	ASC
+GL_LEDGERS	LEDGER_ID	GL_LEDGERS_U2	1	ASC
+GL_LEDGERS	SHORT_NAME	GL_LEDGERS_U3	1	ASC
+
+
+--- composite indexes ---
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_N1	1
+FND_FLEX_VALUES	FLEX_VALUE	FND_FLEX_VALUES_N1	2
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_N2	1
+FND_FLEX_VALUES	STRUCTURED_HIERARCHY_LEVEL	FND_FLEX_VALUES_N2	2
+FND_FLEX_VALUES	FLEX_VALUE_ID	FND_FLEX_VALUES_U1	1
+FND_FLEX_VALUES	ZD_EDITION_NAME	FND_FLEX_VALUES_U1	2
+FND_FLEX_VALUES	FLEX_VALUE_SET_ID	FND_FLEX_VALUES_U2	1
+FND_FLEX_VALUES	PARENT_FLEX_VALUE_LOW	FND_FLEX_VALUES_U2	2
+FND_FLEX_VALUES	FLEX_VALUE	FND_FLEX_VALUES_U2	3
+FND_FLEX_VALUES	ZD_EDITION_NAME	FND_FLEX_VALUES_U2	4
+FND_FLEX_VALUES_TL	DESCRIPTION	FND_FLEX_VALUES_TL_N1	1
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_N1	2
+FND_FLEX_VALUES_TL	FLEX_VALUE_MEANING	FND_FLEX_VALUES_TL_N2	1
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_N2	2
+FND_FLEX_VALUES_TL	FLEX_VALUE_ID	FND_FLEX_VALUES_TL_U1	1
+FND_FLEX_VALUES_TL	LANGUAGE	FND_FLEX_VALUES_TL_U1	2
+FND_FLEX_VALUES_TL	ZD_EDITION_NAME	FND_FLEX_VALUES_TL_U1	3
+GL_BALANCES	CODE_COMBINATION_ID	GL_BALANCES_N1	1
+GL_BALANCES	PERIOD_NAME	GL_BALANCES_N1	2
+GL_BALANCES	PERIOD_NUM	GL_BALANCES_N3	1
+GL_BALANCES	PERIOD_YEAR	GL_BALANCES_N3	2
+GL_BUDGETS	BUDGET_NAME	GL_BUDGETS_U1	1
+GL_BUDGETS	BUDGET_TYPE	GL_BUDGETS_U1	2
+GL_BUDGET_VERSIONS	BUDGET_NAME	GL_BUDGET_VERSIONS_N1	1
+GL_BUDGET_VERSIONS	STATUS	GL_BUDGET_VERSIONS_N1	2
+GL_DAILY_BALANCES	CODE_COMBINATION_ID	GL_DAILY_BALANCES_N1	1
+GL_DAILY_BALANCES	PERIOD_NAME	GL_DAILY_BALANCES_N1	2
+GL_DAILY_BALANCES	CURRENCY_CODE	GL_DAILY_BALANCES_N1	3
+GL_DAILY_BALANCES	PERIOD_YEAR	GL_DAILY_BALANCES_N3	1
+GL_DAILY_BALANCES	PERIOD_NUM	GL_DAILY_BALANCES_N3	2
+GL_DAILY_RATES	FROM_CURRENCY	GL_DAILY_RATES_U1	1
+GL_DAILY_RATES	TO_CURRENCY	GL_DAILY_RATES_U1	2
+GL_DAILY_RATES	CONVERSION_DATE	GL_DAILY_RATES_U1	3
+GL_DAILY_RATES	CONVERSION_TYPE	GL_DAILY_RATES_U1	4
+GL_DATE_PERIOD_MAP	PERIOD_SET_NAME	GL_DATE_PERIOD_MAP_N1	1
+GL_DATE_PERIOD_MAP	PERIOD_NAME	GL_DATE_PERIOD_MAP_N1	2
+GL_DATE_PERIOD_MAP	PERIOD_SET_NAME	GL_DATE_PERIOD_MAP_U1	1
+GL_DATE_PERIOD_MAP	PERIOD_TYPE	GL_DATE_PERIOD_MAP_U1	2
+GL_DATE_PERIOD_MAP	ACCOUNTING_DATE	GL_DATE_PERIOD_MAP_U1	3
+GL_DATE_PERIOD_MAP	PERIOD_NAME	GL_DATE_PERIOD_MAP_U1	4
+GL_JE_BATCHES	NAME	GL_JE_BATCHES_U2	1
+GL_JE_BATCHES	DEFAULT_PERIOD_NAME	GL_JE_BATCHES_U2	2
+GL_JE_BATCHES	CHART_OF_ACCOUNTS_ID	GL_JE_BATCHES_U2	3
+GL_JE_BATCHES	PERIOD_SET_NAME	GL_JE_BATCHES_U2	4
+GL_JE_BATCHES	ACCOUNTED_PERIOD_TYPE	GL_JE_BATCHES_U2	5
+GL_JE_HEADERS	PERIOD_NAME	GL_JE_HEADERS_N2	1
+GL_JE_HEADERS	JE_CATEGORY	GL_JE_HEADERS_N2	2
+GL_JE_HEADERS	DOC_SEQUENCE_VALUE	GL_JE_HEADERS_N3	1
+GL_JE_HEADERS	DOC_SEQUENCE_ID	GL_JE_HEADERS_N3	2
+GL_JE_HEADERS	NAME	GL_JE_HEADERS_U2	1
+GL_JE_HEADERS	JE_BATCH_ID	GL_JE_HEADERS_U2	2
+GL_JE_LINES	CODE_COMBINATION_ID	GL_JE_LINES_N1	1
+GL_JE_LINES	PERIOD_NAME	GL_JE_LINES_N1	2
+GL_JE_LINES	SUBLEDGER_DOC_SEQUENCE_VALUE	GL_JE_LINES_N3	1
+GL_JE_LINES	SUBLEDGER_DOC_SEQUENCE_ID	GL_JE_LINES_N3	2
+GL_JE_LINES	JE_HEADER_ID	GL_JE_LINES_U1	1
+GL_JE_LINES	JE_LINE_NUM	GL_JE_LINES_U1	2
+GL_LEDGERS	CHART_OF_ACCOUNTS_ID	GL_LEDGERS_N1	1
+GL_LEDGERS	PERIOD_SET_NAME	GL_LEDGERS_N1	2
+GL_LEDGERS	ACCOUNTED_PERIOD_TYPE	GL_LEDGERS_N1	3
+
+
+--- function indexes ---
+FND_FLEX_VALUES_TL	UPPER("DESCRIPTION")	FND_FLEX_VALUES_TL_F1	1
+
+
+--- defaults ---
+FND_FLEX_VALUES	ZD_EDITION_NAME	'ORA$BASE'
+FND_FLEX_VALUES	ZD_SYNC	'SYNCED'
+FND_FLEX_VALUES_TL	ZD_EDITION_NAME	'ORA$BASE'
+FND_FLEX_VALUES_TL	ZD_SYNC	'SYNCED'
+
+
+ --- functions ---
+
+
+ --- functions ---
+
+
+ --- procedures ---
+
+
+ --- procedures ---
+
+
+ --- packages ---
+
+
+--- the end ---
