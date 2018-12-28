@@ -1,0 +1,8 @@
+numpy
+apache_beam
+re
+cx_Oracle
+sys
+datetime
+os
+google-cloud-bigquery
