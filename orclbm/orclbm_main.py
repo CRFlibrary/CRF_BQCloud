@@ -1,11 +1,6 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-"""
-Created on Thu Dec 27 12:47:06 2018
-
-@author: abhishek
-"""
 
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -38,11 +33,49 @@ import logging
 from orclbm import orclbm
 
 if __name__ == '__main__':
+    """Call to main function
+
+        This the part which calls the actualm class after parsing the arguments
+        :param2: **gcred**
+           .. Default value: **BeamProjectV1-48b0a434a29a.json**
+           .. What is it: **Path to google creds**
+        :param3: **bqpid**
+           .. Default value: **beamprojectv1**
+           .. What is it: **GCP project name**
+        :param4: **bqds**
+           .. Default value: **AWSRDS_GL**
+           .. What is it: **BigQuery Dataset name** 
+        :param5: **bqtbl**
+           .. Default value: **GL_JE_LINES**
+           .. What is it: **BigQuery table name** 
+        :param6: **orclcn**
+           .. Default value: **GL/GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL**
+           .. What is it: **Oracle connection string** 
+        :param7: **runner**
+           .. Default value: **DirectRunner**
+           .. What is it: **runner to use DirectRunner or DataflowRunner**  
+        :param8: **setup**
+           .. Default value: **./setup.py**
+           .. What is it: **set up file for setting up the workers**
+        :param9: **savesess**
+           .. Default value: **False**
+           .. What is it: **save main session**
+        :param10: **gdfjob**
+           .. Default value: **myjob**
+           .. What is it: **name of dataflow job**    
+        :param11: **gbstaging**
+           .. Default value: **gs://facbeambucketv1/staging**
+           .. What is it: **Path to google staging storage** 
+        :param12: **gbtemp**
+           .. Default value: **gs://facbeambucketv1/temp**
+           .. What is it: **Path to google temp storage** 
+          
+    """
     logging.getLogger().setLevel(logging.INFO)
     #enter google project details
     parser = argparse.ArgumentParser()
-    parser.add_argument('--gcred',dest='gcred',default="./BeamProject-5c794a20f511.json",help='Path to google creds')
-    parser.add_argument('--bqpid',dest='bqpid',default="beamproject",help='GCP project name')
+    parser.add_argument('--gcred',dest='gcred',default="BeamProjectV1-48b0a434a29a.json",help='Path to google creds')
+    parser.add_argument('--bqpid',dest='bqpid',default="beamprojectv1",help='GCP project name')
     parser.add_argument('--bqds',dest='bqds',default="AWSRDS_GL",help='BigQuery Dataset name')
     parser.add_argument('--bqtbl',dest='bqtbl',default="GL_JE_LINES",help='BigQuery table name')
     parser.add_argument('--orclcn',dest='orclcn',default='GL/GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL',help='Oracle connection string')
@@ -50,7 +83,9 @@ if __name__ == '__main__':
     parser.add_argument('--setup',dest='setup',default='./setup.py',help='set up file for workers')
     parser.add_argument('--savesess',dest='savesess',default=False,help='save main session')
     parser.add_argument('--gdfjob',dest='gdfjob',default='myjob',help='name of dataflow job')
-    parser.add_argument('--gbstaging',dest='gbstaging',default='gs://facbeambucket/staging',help='Path to google staging storage')
-    parser.add_argument('--gbtemp',dest='gbtemp',default='gs://facbeambucket/temp',help='Path to google temp storage')
+    parser.add_argument('--gbstaging',dest='gbstaging',default='gs://facbeambucketv1/staging',help='Path to google staging storage')
+    parser.add_argument('--gbtemp',dest='gbtemp',default='gs://facbeambucketv1/temp',help='Path to google temp storage')
+    parser.add_argument('--batchquery', dest='batchquery', default='',help='Path to google staging storage')
+    parser.add_argument('--batchfield', dest='batchfield', default='*',help='Path to google temp storage')
     args = parser.parse_args()
     orclbm.run(args)

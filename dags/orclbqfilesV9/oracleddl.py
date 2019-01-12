@@ -11,39 +11,6 @@ __version__ = '$Id: schema_ora.py 1754 2014-02-14 08:57:52Z mn $'
 #
 # author: Michal Niklas, Adam Kopciński-Galik
 
-OPTIONS = """[OPTIONS]
-Options:
---tables_only      raport only tables
---separate-files   save tables, views etc in separate files
-                   in db_schema directory,
-                   tables are defined as CREATE TABLE statement
---sorted-info      for CREATE TABLE add comment with columns
-                   sorted by name
---zip              with --separate-files enabled zip all created files
---date-dir         with --separate-files add date and time
-                   to db_schema_[date]_[time] directory
-                   with -o[=file_name] save file_name
-                   in db_schema_[date]_[time] directory
---force-dir        with --separate-files do not check
-                   if db_schema directory exists
--o[=file_name]     send results to file instead of stdout
--gcp[=project_name]     google cloud project name
--dtst[=dataset_name]     dataset name
--table[=table_name]     table name
--gcred[=file_name]     google credentials path
---version          show version
---add-ver-info     add version information
---alter-bq     modify big query
---ver-info-sql[=SELECT  ... FROM ... ORDER BY ...]
-                   extend version information by results of this query
-"""
-
-USAGE = 'usage:\n\tschema_ora.py tnsentry username passwd %s' % OPTIONS
-JUSAGE = """usage:
-  jython schema_ora.py jdbcurl user passwd %s
-example:
-  jython schema_ora.py jdbc:oracle:thin:@127.0.0.1:1521:dbname usr pwd > db.sch
-""" % OPTIONS
 from google.cloud import bigquery
 import os
 import sys
@@ -52,6 +19,7 @@ import zipfile
 import os.path
 import time
 import re
+import argparse
 
 USE_JYTHON = 0
 
@@ -940,54 +908,61 @@ def alt_or_create_tbl(fname,tname,project,dataset_id):
         table = client.create_table(table)
     return (table.table_id == tname)
 
-def main():
-	"""main function"""
-	conn_args = [s for s in sys.argv[1:] if not s.startswith('-')]
-	if len(conn_args) != 3:
-		print(USAGE)
-		return 0
-	connect_string, username, passwd = conn_args
-	separate_files = '--separate-files' in sys.argv
-	if separate_files:
-		if os.path.exists(SCHEMA_DIR):
-			if not '--force-dir' in sys.argv:
-				print_err('Output directory "%s" already exists,\nuse --force-dir or --date-dir option!' % (SCHEMA_DIR))
-				return 0
-	stdout = sys.stdout
-	out_f = None
-	out_fn = get_option_value('-o')
-	if out_fn:
-		if '--date-dir' in sys.argv:
-			os.mkdir(SCHEMA_DIR)
-			out_fn = os.path.join(SCHEMA_DIR, out_fn)
-		out_f = open(out_fn, 'w')
-		sys.stdout = out_f
-		CREATED_FILES.append(out_fn)
-
-	if not init_db_conn(connect_string, username, passwd):
-		print_err('Something is terribly wrong with db connection')
-		return 0
-	init_session()
-	if '--add-ver-info' in sys.argv:
-		add_ver_info(separate_files, connect_string, username)
-	dump_db_info(separate_files, out_f, stdout)
-	print("Hi")
-	if '--alter-bq' in sys.argv:
-		print("inBQ")
-		project = get_option_value('-gcp')
-		dataset_id = get_option_value('-dtst')
-		tname  = get_option_value('-table')
-		os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=get_option_value('-gcred')
-		res = alt_or_create_tbl(out_fn,tname,project,dataset_id)
-		print(res)
+def main(args):
+    """main function"""
+    connect_string=args.connect_string
+    username = args.username
+    passwd = args.passwd
+    if args.separate_files:
+        if os.path.exists(SCHEMA_DIR):
+            if not args.forcedir:
+                print_err('Output directory "%s" already exists,\nuse --force-dir or --date-dir option!' % (SCHEMA_DIR))
+                return 0
+    stdout = sys.stdout
+    out_f = None
+    out_fn = args.out
+    if out_fn:
+        if args.datedir:
+            os.mkdir(SCHEMA_DIR)
+            out_fn = os.path.join(SCHEMA_DIR, out_fn)
+    out_f = open(out_fn, 'w')
+    sys.stdout = out_f
+    CREATED_FILES.append(out_fn)
+    if not init_db_conn(connect_string, username, passwd):
+        print_err('Something is terribly wrong with db connection')
+        return 0
+    init_session()
+    if args.addverinfo:
+        add_ver_info(args.separate_files, connect_string, username)
+    dump_db_info(args.separate_files, out_f, stdout)
+    if args.alterbq:
+        print("inBQ")
+        project = args.gcp
+        dataset_id = args.dtst
+        tname  = args.tname
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=args.gcred
+        res = alt_or_create_tbl(out_fn,tname,project,dataset_id)
+        print(res)
 
 
-if '--version' in sys.argv:
-	print(__version__)
-elif __name__ == '__main__':
-	if '--tables_only' in sys.argv:
-		TABLES_ONLY = 1
-	if len(sys.argv) < 4:
-		print(USAGE)
-	else:
-		main()
+if __name__ == '__main__':
+    #enter google project details
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--connect_string',dest='connect_string',default="orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL",help='Path to google creds')
+    parser.add_argument('--username',dest='username',default="GL",help='GCP project name')
+    parser.add_argument('--passwd',dest='passwd',default="GL",help='BigQuery Dataset name')
+    parser.add_argument('--separate_files',dest='separate_files',default=True,help='BigQuery table name')
+    parser.add_argument('--forcedir',dest='forcedir',default=True,help='Oracle connection string')
+    parser.add_argument('--datedir',dest='datedir',default=False,help='Oracle connection string')
+    parser.add_argument('--out',dest='out',default='file.out',help='runner to use DirectRunner or DataflowRunner')
+    parser.add_argument('--addverinfo',dest='addverinfo',default=False,help='set up file for workers')
+    parser.add_argument('--alterbq',dest='alterbq',default=True,help='save main session')
+    parser.add_argument('--gcred',dest='gcred',default="/home/abhishek/airflow/dags/BeamProjectV1-48b0a434a29a.json",help='name of dataflow job')
+    parser.add_argument('--tables_only',dest='tables_only',default=False,help='name of dataflow job')
+    parser.add_argument('--gcp',dest='gcp',default="beamprojectv1",help='save main session')
+    parser.add_argument('--dtst',dest='dtst',default="AWSRDS_GL",help='name of dataflow job')
+    parser.add_argument('--tname',dest='tname',default="GL_JE_LINES",help='name of dataflow job')
+    args = parser.parse_args()
+    main(args)
+        
+        

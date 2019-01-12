@@ -1,14 +1,3 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import print_function
-"""
-Created on Thu Dec 27 14:09:48 2018
-
-@author: abhishek
-"""
-
-#
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
 # this work for additional information regarding copyright ownership.
@@ -26,12 +15,15 @@ Created on Thu Dec 27 14:09:48 2018
 #
 
 """Setup.py module for the workflow's worker utilities.
+
 All the workflow related code is gathered in a package that will be built as a
 source distribution, staged in the staging area for the workflow being run and
 then installed in the workers when they start running.
+
 This behavior is triggered by specifying the --setup_file command line option
 when running the workflow for remote execution.
 """
+
 
 import subprocess
 from distutils.command.build import build as _build
@@ -42,6 +34,7 @@ import setuptools
 # This class handles the pip install mechanism.
 class build(_build):  # pylint: disable=invalid-name
     """A build command class that will be invoked during package install.
+
     The package built using the current setup.py will be staged and later
     installed in the worker using `pip install package'. This class will be
     instantiated during install for this specific scenario and will trigger
@@ -77,7 +70,43 @@ class build(_build):  # pylint: disable=invalid-name
 # TODO(BEAM-3237): Output from the custom commands are missing from the logs.
 # The output of custom commands (including failures) will be logged in the
 # worker-startup log.
-CUSTOM_COMMANDS = [['echo', 'Custom command worked!']]
+CUSTOM_COMMANDS = [
+    ['sudo','apt-get', 'update'],
+    ['sudo','mkdir','-p','/opt/oracle'],
+    ['sudo','apt-get','--assume-yes','install','unzip'],
+    ['wget','https://storage.googleapis.com/facbeambucketv1/files/instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
+    ['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip', '-d' ,'/opt/oracle'],
+    ['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
+    ['sudo','apt-get','--assume-yes','install','libaio1'],
+    ['echo','"export', 'LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3"', '>>','/etc/environment'],
+    ['echo','"export', 'LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3"', '>>','~/.bashrc'],
+    ['printenv'],
+    ['echo','itworked']
+]
+#CUSTOM_COMMANDS = [
+#    ['apt-get', 'update'],
+#    ['apt-get', '--assume-yes', 'install', 'libmysqlclient-dev'],
+#    ['apt-get', '--assume-yes', 'install', 'python-dev'],
+#    ['apt-get', '--assume-yes', 'install', 'libssl1.0.0'],
+#    ['apt-get', '--assume-yes', 'install', 'libssl-dev'],
+#    ['apt-get', '--assume-yes', 'install', 'libxml2-dev'],
+#    ['apt-get', '--assume-yes', 'install', 'libxslt1-dev'],
+#    ['pip', 'install', 'pyga==2.5.1'],
+#    ['pip', 'install', 'MySQL-python==1.2.5'],
+#    ['apt-get', '--assume-yes', 'install', 'libffi-dev'],
+#    ['pip', 'install', 'fluent-logger==0.4.4'],
+#    ['pip', 'install', 'phonenumbers==7.7.2'],
+#    ['pip', 'install', 'python-dateutil==2.5.3'],
+#    ['pip', 'install', 'google-api-python-client==1.5.4'],
+#    ['pip', 'install', 'suds==0.4'],
+#    ['pip', 'install', 'websocket-client==0.37.0'],
+#    ['pip', 'install', 'tornado==4.4.2'],
+#    ['pip', 'install', 'progressbar2==3.10.1'],
+#    ['pip', 'install', 'pyOpenSSL==16.2.0'],
+#    ['pip', 'install', 'futures==3.0.5'],
+#    ['pip', 'install', 'requests==2.4.3'],
+#    ['pip', 'install', 'SQLAlchemy==1.1.2']
+#]
 
 
 class CustomCommands(setuptools.Command):
@@ -92,8 +121,8 @@ class CustomCommands(setuptools.Command):
     def RunCustomCommand(self, command_list):
         print('Running command: %s' % command_list)
         p = subprocess.Popen(
-                command_list,
-                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            command_list,
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # Can use communicate(input='y\n'.encode()) if the command run requires
         # some confirmation.
         stdout_data, _ = p.communicate()
@@ -110,17 +139,18 @@ class CustomCommands(setuptools.Command):
 # Note that the Python Dataflow containers come with numpy already installed
 # so this dependency will not trigger anything to be installed unless a version
 # restriction is specified.
-REQUIRED_PACKAGES = ['numpy','apache_beam','re','cx_Oracle','sys','datetime','os','google-cloud-bigquery']
+REQUIRED_PACKAGES = ['numpy','apache_beam','apache_beam[gcp]','cx_Oracle','datetime','google-cloud-bigquery>1.6.0,<1.7.0']
 
 
 setuptools.setup(
-        name='orclbm',
-        version='0.0.1',
-        description='Oraclebm workflow package.',
-        install_requires=REQUIRED_PACKAGES,
-        packages=setuptools.find_packages(),
-        cmdclass={
+    name='orclbm',
+    version='0.0.1',
+    description='Oraclebm workflow package.',
+    install_requires=REQUIRED_PACKAGES,
+    packages=setuptools.find_packages(),
+    cmdclass={
         # Command class instantiated and run during pip install scenarios.
         'build': build,
         'CustomCommands': CustomCommands,
-        })
+        }
+    )

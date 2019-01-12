@@ -1,8 +1,6 @@
 numpy
 apache_beam
-re
+apache_beam[gcp]
 cx_Oracle
-sys
 datetime
-os
-google-cloud-bigquery
+google-cloud-bigquery<1.7.0,>1.6.0
