@@ -15,7 +15,7 @@
         - [orclbm_main.py](#orclbmmainpy)
       - [Parameters to main file](#parameters-to-main-file-1)
       - [Call to file](#call-to-file-1)
-    - [Step 5: Apache Airbeam](#step-5-apache-airbeam)
+    - [Step 5: Apache Airflow](#step-5-apache-airflow)
       - [Installation and machine setup](#installation-and-machine-setup)
   - [Striim](#striim)
     - [Step 1: set up machine](#step-1-set-up-machine)
@@ -221,7 +221,7 @@ python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name
 ```
 Post completion of both steps now we know that both ddl and data transfer works now we connect to airflow. For airflow we need t change the codes a little bit which we will come to in due course.
 
-### Step 5: Apache Airbeam
+### Step 5: Apache Airflow
 
 #### Installation and machine setup
 
