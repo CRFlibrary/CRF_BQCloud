@@ -43,6 +43,17 @@ python -m pip install --upgrade pip
 ```
 2. set up oracle instant cleint as per https://medium.com/@arunkundgol/how-to-setup-oracle-instant-client-on-windows-subsystem-for-linux-cccee61d5b0b
 
+```
+cd
+wget https://storage.googleapis.com/facbeambucketv1/files/instantclient-basic-linux.x64-18.3.0.0.0dbru.zip
+sudo apt-get install unzip
+sudo mkdir -p /opt/oracle
+sudo unzip instantclient-basic-linux.x64-18.3.0.0.0dbru.zip -d /opt/oracle
+export $LD_LIBRRAY_PATH="opt/oracle/instantclient_18_3/:$LD_LIBRRAY_PATH"
+sudo ldconfig
+
+```
+
 3. install required packages after entering the project directory as
 
 ```
