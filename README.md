@@ -41,14 +41,16 @@ bash Anaconda2-2018.12-Linux-x86_64.sh
 python -m pip install --upgrade pip
 
 ```
-2. install required packages after entering the project directory as
+2. set up oracle instant cleint as per https://medium.com/@arunkundgol/how-to-setup-oracle-instant-client-on-windows-subsystem-for-linux-cccee61d5b0b
+
+3. install required packages after entering the project directory as
 
 ```
 pip install -r requirements.txt
 
 ```
 
-3. if the above hits an error then 
+4. if the above hits an error then 
 
 ```
 pip install cx_oracle
@@ -57,6 +59,7 @@ pip install apache-beam[gcp]
 pip install apache-airflow
 pip install apache-airflow[gcp-api]
 ```
+
 ### Step 3: DDL Code
 
 this code is for creating the data definition for the table in big query after reading the data definition from oracle. Currently this happens with one table only. This is intended since currently we are doing the processing through 3 m3chanisms- batch , streaming and striim.
