@@ -36,6 +36,8 @@ We may either choose to develop locally or a VM in GCP. In either case it would 
 
 1. install and update anaconda distribution for python 2.7 accepting all defaults : 
 ```
+sudo apt-get update
+sudo apt-get install bzip2
 sudo wget https://repo.continuum.io/archive/Anaconda2-2018.12-Linux-x86_64.sh
 bash Anaconda2-2018.12-Linux-x86_64.sh
 python -m pip install --upgrade pip
