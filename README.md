@@ -43,7 +43,7 @@ bash Anaconda2-2018.12-Linux-x86_64.sh
 python -m pip install --upgrade pip
 
 ```
-2. set up oracle instant cleint as per https://medium.com/@arunkundgol/how-to-setup-oracle-instant-client-on-windows-subsystem-for-linux-cccee61d5b0b
+2. set up oracle instant cleint as per https://oracle.github.io/odpi/doc/installation.html#linux   (oracle linux zip)
 
 ```
 cd
@@ -51,8 +51,9 @@ wget https://storage.googleapis.com/facbeambucketv1/files/instantclient-basic-li
 sudo apt-get install unzip
 sudo mkdir -p /opt/oracle
 sudo unzip instantclient-basic-linux.x64-18.3.0.0.0dbru.zip -d /opt/oracle
-export $LD_LIBRRAY_PATH="opt/oracle/instantclient_18_3/:$LD_LIBRRAY_PATH"
+sudo sh -c "echo /opt/oracle/instantclient_18_3 > /etc/ld.so.conf.d/oracle-instantclient.conf"
 sudo ldconfig
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3:$LD_LIBRARY_PATH
 
 ```
 
@@ -66,12 +67,27 @@ pip install -r requirements.txt
 4. if the above hits an error then 
 
 ```
+export SLUGIFY_USES_TEXT_UNIDECODE=yes
 pip install cx_oracle
 pip install apache-beam
 pip install apache-beam[gcp]
 pip install apache-airflow
 pip install apache-airflow[gcp-api]
+pip install google-cloud-storage
+pip install google-cloud-bigqyery
 ```
+
+5. Download the repository
+```
+sudo apt-get install git
+git clone https://github.com/CRFlibrary/CRF_BQCloud.git
+```
+
+to get latest repo copy
+```
+git push
+```
+now by entering thps directory u can see the infividual projects
 
 ### Step 3: DDL Code
 
