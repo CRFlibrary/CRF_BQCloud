@@ -1,0 +1,12 @@
+[
+    {
+        "connectstr" : "GL/GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL",
+        "queryfields" : ["ROWNUM"],
+        "queryrel" : ["<"],
+        "fields" :"*",
+        "tname" : "GL_JE_LINES",
+        "project_id" : "beamprojectv1",
+        "topic_name" : "GL_JE_LINES",
+        "gcred":"BeamProjectV1-48b0a434a29a.json"
+    }
+]
