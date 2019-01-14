@@ -34,8 +34,10 @@
 
 We may either choose to develop locally or a VM in GCP. In either case it would be better if we start using a linux machine. The project has been developed on Ubuntu 16.04 and tested on ubuntu 14/18, centos, and macos mojhave. Since most machines will have python
 
-1. install and upgrade pip using the command : 
+1. install and update anaconda distribution for python 2.7 accepting all defaults : 
 ```
+sudo wget https://repo.continuum.io/archive/Anaconda2-2018.12-Linux-x86_64.sh
+bash Anaconda2-2018.12-Linux-x86_64.sh
 python -m pip install --upgrade pip
 
 ```
@@ -44,6 +46,16 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 
+```
+
+3. if the above hits an error then 
+
+```
+pip install cx_oracle
+pip install apache-beam
+pip install apache-beam[gcp]
+pip install apache-airflow
+pip install apache-airflow[gcp-api]
 ```
 ### Step 3: DDL Code
 
