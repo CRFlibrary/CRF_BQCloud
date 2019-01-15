@@ -34,8 +34,6 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-
-
 # CRF_BQCloud
 
 ##  1. <a name='Apachebeam:BatchProcessingAirflow'></a>Apache beam: Batch Processing Airflow
