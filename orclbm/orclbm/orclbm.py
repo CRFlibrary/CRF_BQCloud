@@ -154,7 +154,7 @@ class ReadFromOracle(PTransform):
     """
     def __init__(self, connection_string, db, table, query=None, fields=None):
         """
-        Initializes :class:`ReadFromMongo`
+        Initializes :class:`ReadFromOracle`
         Uses source :class:`_MongoSource`
             :param self: 
             :param connection_string: 
