@@ -116,7 +116,6 @@ class _OracleSource(iobase.BoundedSource):
             :param range_tracker: 
         """
         cur = self.client.cursor()
-        print('select '+ str(self._fields) +' from '+ str(self._table) + str(self._query))
         cur.execute('select '+ self._fields +' from '+ self._table + self._query)
         for row in cur:
             yield row
