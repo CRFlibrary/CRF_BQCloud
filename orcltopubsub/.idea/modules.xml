@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/DDL.iml" filepath="$PROJECT_DIR$/.idea/DDL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/orcltopubsub.iml" filepath="$PROJECT_DIR$/.idea/orcltopubsub.iml" />
     </modules>
   </component>
 </project>

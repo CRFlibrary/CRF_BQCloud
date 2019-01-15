@@ -38,6 +38,20 @@ dag = DAG(
 run_DDL = BashOperator(
     task_id='createtabledefn',
     bash_command="python /home/abhishek/airflow/dags/orclbqfilesV9/oracleddl.py",
+    params = {"connect_string": "orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL",
+            "username":"GL",
+            "passwd":"GL",
+            "separate_files":True,
+            "forcedir":True,
+            "datedir":False,
+            "out":"file.out",
+            "addverinfo":False,
+            "alterbq":True,
+            "gcred":"/home/abhishek/airflow/dags/BeamProjectV1-48b0a434a29a.json",
+            "tables_only":False,
+            "gcp": "beamprojectv1",
+            "dtst": "AWSRDS_GL",
+            "tname": "GL_JE_LINES"},
     dag=dag,
 )
 

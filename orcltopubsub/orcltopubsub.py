@@ -6,12 +6,11 @@ Created on Sun Jan 13 13:27:44 2019
 @author: abhishekray
 """
 
-import time
 import cx_Oracle
-import argparser
 import json
-import sys
 import os
+import copy
+import sys
 from google.cloud import pubsub_v1
 
 
@@ -42,8 +41,9 @@ def getfeeddata(connectstr,queryfields,queryvals,queryrel,fields,tname):
                 querystr = querystr + " AND " + queryfields[itr] + " " + queryrel[itr] +" " + str(queryvals[itr])
     cursor = db1.cursor()
     cursor.execute("SELECT " + fields + " FROM "+tname + querystr)
+    colnames = [row[0] for row in cursor.description]
     res=cursor.fetchall()
-    return res
+    return res, colnames
 
 def callback(message_future):
     # When timeout is unspecified, the exception method waits indefinitely.
@@ -65,21 +65,31 @@ def main(config):
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=config["gcred"]
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, topic_name)
+
     while True:
         currcnt = getdbcnt(connectstr,queryfields,queryvals,queryrel,fields,tname)
-        datalist = getfeeddata(connectstr,queryfields.append("ROWNUM"),queryvals.append(startcnt),queryrel.append(">"),fields,tname)
+        flds = copy.copy(queryfields)
+        vals = copy.copy(queryvals)
+        rel = copy.copy(queryrel)
+        flds.append("ROWNUM")
+        vals.append(startcnt)
+        rel.append(">")
+        datalist , colnames = getfeeddata(connectstr,flds,vals,rel,fields,tname)
+        for item in datalist:
+            msgdict=dict()
+            itr=0
+            for col in colnames:
+                msgdict[col] = item[itr]
+                itr=itr+1
+            msg = str(msgdict).encode('utf-8')
+            message_future = publisher.publish(topic_path, data=msg)
+            message_future.add_done_callback(callback)
         startcnt = currcnt
-        datalist = str(datalist).encode('utf-8')
-        # When you publish a message, the client returns a Future.
-        message_future = publisher.publish(topic_path, data=datalist)
-        message_future.add_done_callback(callback)
-        
-
 
 if __name__=='__main__':
     with open('orcltopubsub.json') as f:
         data = json.load(f)
-    config = data[int(sys.argv[1])]
+    config = data[sys.argv[0]]
     main(config)
     
     

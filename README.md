@@ -1,56 +1,129 @@
+<!-- vscode-markdown-toc -->
+* 1. [Apache beam: Batch Processing Airflow](#Apachebeam:BatchProcessingAirflow)
+	* 1.1. [Step 1: Setup Google cloud project](#Step1:SetupGooglecloudproject)
+	* 1.2. [Step 2: Create python environment](#Step2:Createpythonenvironment)
+	* 1.3. [Step 3: DDL Code](#Step3:DDLCode)
+		* 1.3.1. [ Code Folder Structure](#CodeFolderStructure)
+		* 1.3.2. [Parameters to main file](#Parameterstomainfile)
+		* 1.3.3. [Call to file](#Calltofile)
+	* 1.4. [Step 4: Data transfer code](#Step4:Datatransfercode)
+		* 1.4.1. [Code structure](#Codestructure)
+		* 1.4.2. [File Descriptors](#FileDescriptors)
+		* 1.4.3. [Parameters to main file](#Parameterstomainfile-1)
+		* 1.4.4. [Call to file](#Calltofile-1)
+* 2. [Striim](#Striim)
+	* 2.1. [Step 1: set up machine](#Step1:setupmachine)
+* 3. [Apache BEAM streaming](#ApacheBEAMstreaming)
+	* 3.1. [Set up](#Setup)
+	* 3.2. [Folder structure](#Folderstructure)
+	* 3.3. [Configuration for publisher (orcltopubsub.json)](#Configurationforpublisherorcltopubsub.json)
+	* 3.4. [Call to publisher](#Calltopublisher)
+	* 3.5. [Arguments for subscriber and streamer](#Argumentsforsubscriberandstreamer)
+	* 3.6. [Call to subscriber and streamer](#Calltosubscriberandstreamer)
+* 4. [Step 5: Apache Airflow Integration](#Step5:ApacheAirflowIntegration)
+	* 4.1. [Installation and machine setup](#Installationandmachinesetup)
+	* 4.2. [DAG: BEAM Batch Precessing](#DAG:BEAMBatchPrecessing)
+	* 4.3. [DAG: BEAM Stream Precessing](#DAG:BEAMStreamPrecessing)
+		* 4.3.1. [Folder structure](#Folderstructure-1)
+	* 4.4. [Run on UI](#RunonUI)
+* 5. [Appendix](#Appendix)
+
+<!-- vscode-markdown-toc-config
+	numbering=true
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
+
+
 # CRF_BQCloud
 
-- [CRF_BQCloud](#crfbqcloud)
-  - [Apache beam: Batch Processing Airflow](#apache-beam-batch-processing-airflow)
-    - [Step 1: Setup Google cloud project](#step-1-setup-google-cloud-project)
-    - [Step 2: Create python environment](#step-2-create-python-environment)
-    - [Step 3: DDL Code](#step-3-ddl-code)
-      - [Code Folder Structure](#code-folder-structure)
-      - [Parameters to main file](#parameters-to-main-file)
-      - [Call to file](#call-to-file)
-    - [Step 4: Data transfer code](#step-4-data-transfer-code)
-      - [Code structure](#code-structure)
-      - [File Descriptors](#file-descriptors)
-        - [Json file](#json-file)
-        - [orclbm_main.py](#orclbmmainpy)
-      - [Parameters to main file](#parameters-to-main-file-1)
-      - [Call to file](#call-to-file-1)
-    - [Step 5: Apache Airflow](#step-5-apache-airflow)
-      - [Installation and machine setup](#installation-and-machine-setup)
-  - [Striim](#striim)
-    - [Step 1: set up machine](#step-1-set-up-machine)
-  - [Appendix](#appendix)
+##  1. <a name='Apachebeam:BatchProcessingAirflow'></a>Apache beam: Batch Processing Airflow
 
-## Apache beam: Batch Processing Airflow
-
-### Step 1: Setup Google cloud project
+###  1.1. <a name='Step1:SetupGooglecloudproject'></a>Step 1: Setup Google cloud project
  
-1. Set up the project as per the guide given in https://cloud.google.com/dataflow/docs/quickstarts/quickstart-python
+1. Set up the project as per the guide given in <https://cloud.google.com/dataflow/docs/quickstarts/quickstart-python>
 2. Now we have to create a gcp compute instance. the minimum requirement for smooth running is 2 vCPUs, 9.5 GB memory . This is the custom opttion. To get here first start any other instance (preferable lower and complete the following steps). Google will then show a recommendation link in the compute instances page.
 3. All firewall rules now need to be set up as per diagram
 ![Alt text](images/network.png?raw=true "Title")
 
-### Step 2: Create python environment
+###  1.2. <a name='Step2:Createpythonenvironment'></a>Step 2: Create python environment
 
 We may either choose to develop locally or a VM in GCP. In either case it would be better if we start using a linux machine. The project has been developed on Ubuntu 16.04 and tested on ubuntu 14/18, centos, and macos mojhave. Since most machines will have python
 
-1. install and upgrade pip using the command : 
+1. install and update anaconda distribution for python 2.7 accepting all defaults :
+
 ```
+sudo apt-get update
+sudo apt-get install bzip2
+sudo wget https://repo.continuum.io/archive/Anaconda2-2018.12-Linux-x86_64.sh
+bash Anaconda2-2018.12-Linux-x86_64.sh
 python -m pip install --upgrade pip
 
 ```
-2. install required packages after entering the project directory as
+2. set up oracle instant cleint as per https://oracle.github.io/odpi/doc/installation.html#linux   (oracle linux zip)
+
+```
+cd
+wget https://storage.googleapis.com/facbeambucketv1/files/instantclient-basic-linux.x64-18.3.0.0.0dbru.zip
+sudo apt-get install unzip
+sudo mkdir -p /opt/oracle
+sudo unzip instantclient-basic-linux.x64-18.3.0.0.0dbru.zip -d /opt/oracle
+sudo sh -c "echo /opt/oracle/instantclient_18_3 > /etc/ld.so.conf.d/oracle-instantclient.conf"
+sudo ldconfig
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3:$LD_LIBRARY_PATH
+sudo nano /etc/environment
+```
+in the editor window add 
+```
+LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3:$LD_LIBRARY_PATH
+```
+save and exit
+then run
+```
+source /etc/environment
+```
+
+3. install required packages after entering the project directory as
 
 ```
 pip install -r requirements.txt
 
 ```
-### Step 3: DDL Code
 
-this code is for creating the data definition for the table in big query after reading the data definition from oracle. Currently this happens with one table only. This is intended since currently we are doing the processing through 3 m3chanisms- batch , streaming and striim.
+4. if the above hits an error then 
+
+```
+sudo apt-get install gcc g++
+export SLUGIFY_USES_TEXT_UNIDECODE=yes
+pip install cx_oracle
+pip install apache-beam
+pip install apache-beam[gcp]
+pip install apache-airflow
+pip install apache-airflow[gcp-api]
+pip install google-cloud-storage
+pip install google-cloud-bigqyery
+```
+
+5. Download the repository
+  
+```
+sudo apt-get install git
+git clone https://github.com/CRFlibrary/CRF_BQCloud.git
+```
+
+to get latest repo copy
+```
+git pull
+```
+now by entering thps directory u can see the infividual projects
+
+###  1.3. <a name='Step3:DDLCode'></a>Step 3: DDL Code
+
+this code is for creating the data definition for the table in big query after reading the data definition from oracle. Currently this happens with one table only. This is intended since currently we are doing the processing through 3 mechanisms- batch , streaming and striim.
 
 
-####  Code Folder Structure
+####  1.3.1. <a name='CodeFolderStructure'></a> Code Folder Structure
 ```
 .DDL<br />
 ├── BeamProjectV1-48b0a434a29a.json<br />
@@ -88,7 +161,7 @@ this code is for creating the data definition for the table in big query after r
 
 ```
 
-#### Parameters to main file
+####  1.3.2. <a name='Parameterstomainfile'></a>Parameters to main file
 
 1. variable name : **connect_string**
    1. Default value: **orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL**
@@ -131,14 +204,14 @@ this code is for creating the data definition for the table in big query after r
     2.  What is it: **name of table in dataset**     
 
 
-#### Call to file
+####  1.3.3. <a name='Calltofile'></a>Call to file
 
 python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name 2> < parameter value 3>
 
 
-### Step 4: Data transfer code
+###  1.4. <a name='Step4:Datatransfercode'></a>Step 4: Data transfer code
 
-#### Code structure
+####  1.4.1. <a name='Codestructure'></a>Code structure
 
 ![Alt text](images/orclbmcodemap.png?raw=true "Title")
 ```
@@ -161,7 +234,7 @@ python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name
 ```
 
 
-#### File Descriptors
+####  1.4.2. <a name='FileDescriptors'></a>File Descriptors
 
 ##### Json file
 This is the json file containing the credentials for the google cloud project thats was downloaded in the setting up of google cloud project part.
@@ -170,7 +243,7 @@ This is the json file containing the credentials for the google cloud project th
 
 This collects argumnets from the user and inputs the same for the Beam batch project top run. The arguments are as follows
 
-#### Parameters to main file
+####  1.4.3. <a name='Parameterstomainfile-1'></a>Parameters to main file
 
 1. variable name : **gcred**
    1. Default value: **BeamProjectV1-48b0a434a29a.json**
@@ -213,7 +286,7 @@ This collects argumnets from the user and inputs the same for the Beam batch pro
     2.  What is it: **fields to be pulled. currently its just a asterisk sign to get all fields** 
 
 
-#### Call to file
+####  1.4.4. <a name='Calltofile-1'></a>Call to file
 
 ```
 python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name 2> < parameter value 3>
@@ -221,110 +294,11 @@ python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name
 ```
 Post completion of both steps now we know that both ddl and data transfer works now we connect to airflow. For airflow we need t change the codes a little bit which we will come to in due course.
 
-### Step 5: Apache Airflow
-
-#### Installation and machine setup
-
-1. Install airflow package for gcp
-
-```
-pip install apache-airflow[gcp_api]
-```
-2. Define airflow home
-
-```
-export AIRFLOW_HOME=~/airflow
-```
-3. Initialise database
-
-```
-airflow initdb
-```
-4. start the web server, default port is 8080. Note that the nohup and & allows you to close terminal.
-
-```
-nohup airflow webserver -p 8080 &
-```
-
-5. Now start the sceduler so it loads jobs to ui
-
-```
-nohup airflow scheduler &
-
-```
-
-6. Put all contents of your dag folder into /home/< username >/airflow/dags
-
-contents of the dag folder is as follows
-
-```
-Dag
-├── oracledagV9.py
-└── orclbqfilesV9
-    ├── BeamProjectV1-48b0a434a29a.json
-    ├── __init__.py
-    ├── __init__.pyc
-    ├── __pycache__
-    │   ├── __init__.cpython-37.pyc
-    │   ├── oracleddl.cpython-37.pyc
-    │   └── orclbm.cpython-37.pyc
-    ├── db_schema
-    │   ├── functions
-    │   ├── packages
-    │   ├── procedures
-    │   ├── sequences
-    │   ├── tables
-    │   │   ├── fnd_flex_values.sql
-    │   │   ├── fnd_flex_values_tl.sql
-    │   │   ├── gl_balances.sql
-    │   │   ├── gl_budget_types.sql
-    │   │   ├── gl_budget_versions.sql
-    │   │   ├── gl_budgets.sql
-    │   │   ├── gl_code_combinations.sql
-    │   │   ├── gl_daily_balances.sql
-    │   │   ├── gl_daily_rates.sql
-    │   │   ├── gl_date_period_map.sql
-    │   │   ├── gl_je_batches.sql
-    │   │   ├── gl_je_headers.sql
-    │   │   ├── gl_je_lines.sql
-    │   │   └── gl_ledgers.sql
-    │   └── views
-    ├── file.out
-    ├── oracleddl.py
-    ├── oracleddl.pyc
-    ├── orclbm.py
-    └── orclbm.pyc
-```
-
-7. in your browser now go to http:\\[gcp instance publlic IP]:8080\admin
-8. Our dag has two tasks 
-   1. creating the table definition or altering it
-   2. data transfer to the table
-9.  you should see your dag lloaded. If not please wait and refresh
-
-![Alt text](images/dagmain.png?raw=true "Title")
-
-![Alt text](images/dagtask.png?raw=true "Title")
-
-the task has to turned on by the toggle swittch to the left.
-
-9. To see the detailed status of the retries Please click on the dag name in the DAG column which will take you to the tree view which shows you what happened at every attempt
-
-![Alt text](images/dagtasktree.png?raw=true "Title")
-
-10. Each of the small oxes refer to a task retry. the significance of the colour of the boxes is given on the legend to the right. Clicking on one of them gives us the following windo on which we can monitor the logs  and has other options for rescheduling, remapping flow, ignoring unmet dependencies and so on
 
 
-![Alt text](images/tasktretryopt.png?raw=true "Title")
+##  2. <a name='Striim'></a>Striim
 
-11. finally we check if the task is actually  working in the big query query builder using the following query [Note this cchecks if the code is working at a broad level but doesnt show any issue that happened at a particular row. FOr this we must go through the logs] 
-
-![Alt text](images/bq.png?raw=true "Title")
-
-
-## Striim
-
-### Step 1: set up machine
+###  2.1. <a name='Step1:setupmachine'></a>Step 1: set up machine
 
 1. Goto  https://console.cloud.google.com/marketplace/browse?q=Striim&pli=1&utm_campaign=Product%20Download&utm_medium=email&_hsenc=p2ANqtz-8hP-Mj43okxt-omfdTzTnz-Yb84ieJCSTmCIOrk3f5qJ6S3tZoG2fWGTRsse8gVxOKWAXFkwNqwaZ8Y6ikr9WEtiz3eQ&_hsmi=66839972&utm_content=66839972&utm_source=hs_automation&hsCtaTracking=1139c9fb-fc9a-4d9c-b699-17b8c8af0a32%7C934a6def-e305-48da-8c4f-4a11675dba47 and select Striim (the first option)
 2. Now select laung on compute engine
@@ -361,7 +335,243 @@ sudo chmod 777 BeamProjectV1-48b0a434a29a.json
 18. Now on the app screen at the top select Deploy App and then Start App 
 
 
-## Appendix
+##  3. <a name='ApacheBEAMstreaming'></a>Apache BEAM streaming
+
+The Streaming processing has two aspects to it. 
+1. the listener which runs continuous on a tablke tracking the additions to the table for a particular query and publishes this to the google cloud pub sub
+2. The other part is the listener or subscriber which receives those changes and send them to bigquery
+
+###  3.1. <a name='Setup'></a>Set up
+
+For this setup we first go to google cloud pub/sub module and create a new topic which is exactly same as the oracle table name / big query table name. This is done for simplicity and is not a necessity.
+
+###  3.2. <a name='Folderstructure'></a>Folder structure
+
+.
+├── BeamProjectV1-48b0a434a29a.json<br />
+├── beamstreamingpubsubtobq.py<br />
+├── orcltopubsub.json<br />
+└── orcltopubsub.py<br />
+
+
+###  3.3. <a name='Configurationforpublisherorcltopubsub.json'></a>Configuration for publisher (orcltopubsub.json)
+
+please note that the json format is an array. so we can put multiple configurations in here. Which config to run is decided at runtime as a command line integer argument.
+
+```
+[
+    {
+        "connectstr" :"GL/GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL",
+        "queryfields" : ["ROWNUM"],
+        "queryrel" : ["<"],
+        "queryvals" : ["10"],
+        "fields" :"*",
+        "tname" : "GL_JE_LINES",
+        "project_id" : "beamprojectv1",
+        "topic_name" : "GL_JE_LINES",
+        "gcred":"BeamProjectV1-48b0a434a29a.json"
+    }
+]
+```
+1. variable name : **connectstr**
+   1. Default value: **GL/GL@orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL**
+   2. What is it: **Oracle connection string using username and password**
+2. variable name : **queryfields**
+   1. Default value: **["ROWNUM"]**
+   2. What is it: **these are the fields in the where or having clause of the sql used to pull the data or monitor the data for streaming**
+3. variable name : **queryrel**
+   1. Default value: **["<"]**
+   2. What is it: **these are the relations of the corresponding fields in the where or having clause of the sql used to pull the data or monitor the data for streaming/ The values will be >/</=/>=/<=** 
+4. variable name : **fields**
+   1. Default value: *
+   2. What is it: **these are the fields in the select query for the streaming pull** 
+5. variable name : **tname**
+   1. Default value: **GL_JE_LINES**
+   2. What is it: **tablem name from which to pull the data or monitor in oracle** 
+6. variable name : **project_id**
+   1. Default value: **beamprojectv1**
+   2. What is it: **default project in gcp**  
+7. variable name : **topic_name**
+   1. Default value: **GL_JE_LINES**
+   2. What is it: **topic name created for this streaming job in GCP pubsub**
+8. variable name : **gcred**
+   1. Default value: **BeamProjectV1-48b0a434a29a.json**
+   2. What is it: **path to google credentials**
+
+
+###  3.4. <a name='Calltopublisher'></a>Call to publisher
+
+```
+python orcltopubsub.py 0
+```
+the 0 means to run the first configuration
+
+###  3.5. <a name='Argumentsforsubscriberandstreamer'></a>Arguments for subscriber and streamer 
+
+1. variable name : **gcred**
+   1. Default value: **BeamProjectV1-48b0a434a29a.json**
+   2. What is it: **path to google credentials**
+2. variable name : **input_topic**
+   1. Default value: **projects/beamprojectv1/topics/GL_JE_LINES**
+   2. What is it: **topic name created for this streaming job in GCP pubsub Input PubSub topic of the form projects/< PROJECT >/topics/< TOPIC >**
+3. variable name : **bqpid**
+   1. Default value: **beamprojectv1**
+   2. What is it: **default project in gcp**
+4. variable name : **bqds**
+   1. Default value: **AWSRDS_GL**
+   2. What is it: **the dataset in bigquery**
+5. variable name : **bqtbl**
+   1. Default value: **GL_JE_LINES**
+   2. What is it: **the table name in bigquery** 
+6. variable name : **gdfjob**
+   1. Default value: **myjob**
+   2. What is it: **dataflow job name** 
+7. variable name : **gbstaging**
+   1. Default value: **gs://facbeambucketv1/staging**
+   2. What is it: **Path to google staging storage** 
+8. variable name : **gbtemp**
+   1. Default value: **gs://facbeambucketv1/temp**
+   2. What is it: **Path to google staging storage** 
+9. variable name : **runner**
+   1. Default value: **DirectRunner**
+   2. What is it: **runner to use DirectRunner or DataflowRunner**  
+10. variable name : **savesess**
+   1. Default value: **True**
+   2. What is it: **save main session**  
+
+###  3.6. <a name='Calltosubscriberandstreamer'></a>Call to subscriber and streamer
+
+python beamstreamingpubsubtobq.py --< parameter name 1> < parameter value 1> --< parameter name 2> < parameter value 3>
+
+##  4. <a name='Step5:ApacheAirflowIntegration'></a>Step 5: Apache Airflow Integration
+
+###  4.1. <a name='Installationandmachinesetup'></a>Installation and machine setup
+
+1. Install airflow package for gcp
+
+```
+pip install apache-airflow[gcp_api]
+```
+2. Define airflow home
+
+```
+export AIRFLOW_HOME=~/airflow
+```
+3. Initialise database
+
+```
+airflow initdb
+```
+4. start the web server, default port is 8080. Note that the nohup and & allows you to close terminal.
+
+```
+nohup airflow webserver -p 8080 &
+```
+
+5. Now start the sceduler so it loads jobs to ui
+
+```
+nohup airflow scheduler &
+
+```
+
+###  4.2. <a name='DAG:BEAMBatchPrecessing'></a>DAG: BEAM Batch Precessing
+
+1. Put all contents of your dag folder into /home/< username >/airflow/dags
+
+contents of the dag folder is as follows
+
+```
+Dag
+├── oracledagV9.py
+├── BeamProjectV1-48b0a434a29a.json
+└── orclbqfilesV9
+    ├── __init__.py
+    ├── __init__.pyc
+    ├── __pycache__
+    │   ├── __init__.cpython-37.pyc
+    │   ├── oracleddl.cpython-37.pyc
+    │   └── orclbm.cpython-37.pyc
+    ├── db_schema
+    │   ├── functions
+    │   ├── packages
+    │   ├── procedures
+    │   ├── sequences
+    │   ├── tables
+    │   │   ├── fnd_flex_values.sql
+    │   │   ├── fnd_flex_values_tl.sql
+    │   │   ├── gl_balances.sql
+    │   │   ├── gl_budget_types.sql
+    │   │   ├── gl_budget_versions.sql
+    │   │   ├── gl_budgets.sql
+    │   │   ├── gl_code_combinations.sql
+    │   │   ├── gl_daily_balances.sql
+    │   │   ├── gl_daily_rates.sql
+    │   │   ├── gl_date_period_map.sql
+    │   │   ├── gl_je_batches.sql
+    │   │   ├── gl_je_headers.sql
+    │   │   ├── gl_je_lines.sql
+    │   │   └── gl_ledgers.sql
+    │   └── views
+    ├── file.out
+    ├── oracleddl.py
+    ├── oracleddl.pyc
+    ├── orclbm.py
+    └── orclbm.pyc
+```
+
+2. in your browser now go to http:\\[gcp instance publlic IP]:8080\admin
+3. Our dag has two tasks 
+   1. creating the table definition or altering it
+   2. data transfer to the table
+4.  you should see your dag lloaded. If not please wait and refresh
+
+![Alt text](images/dagmain.png?raw=true "Title")
+
+![Alt text](images/dagtask.png?raw=true "Title")
+
+the task has to turned on by the toggle swittch to the left.
+
+5. To see the detailed status of the retries Please click on the dag name in the DAG column which will take you to the tree view which shows you what happened at every attempt
+
+![Alt text](images/dagtasktree.png?raw=true "Title")
+
+6. Each of the small oxes refer to a task retry. the significance of the colour of the boxes is given on the legend to the right. Clicking on one of them gives us the following windo on which we can monitor the logs  and has other options for rescheduling, remapping flow, ignoring unmet dependencies and so on
+
+
+![Alt text](images/tasktretryopt.png?raw=true "Title")
+
+7. finally we check if the task is actually  working in the big query query builder using the following query [Note this cchecks if the code is working at a broad level but doesnt show any issue that happened at a particular row. FOr this we must go through the logs] 
+
+![Alt text](images/bq.png?raw=true "Title")
+
+###  4.3. <a name='DAG:BEAMStreamPrecessing'></a>DAG: BEAM Stream Precessing
+
+####  4.3.1. <a name='Folderstructure-1'></a>Folder structure
+```
+.dags
+├── BeamProjectV1-48b0a434a29a.json
+├── beamstreaming
+│   ├── beamstreamingpubsubtobq.py
+│   ├── orcltopubsub.json
+│   └── orcltopubsub.py
+├── oracletobqstramingdag.py
+    ├── file.out
+    ├── __init__.py
+    ├── __init__.pyc
+    ├── oracleddl.py
+    ├── oracleddl.pyc
+    ├── orclbm.py
+    ├── orclbm.pyc
+    └── __pycache__
+        ├── __init__.cpython-37.pyc
+        ├── oracleddl.cpython-37.pyc
+```
+###  4.4. <a name='RunonUI'></a>Run on UI
+
+The rest of the process is similar to batch but the difference is that since this is a pub sub job, it actually never ends unlike batch unless its turned off.
+
+##  5. <a name='Appendix'></a>Appendix
 
 The google credentials json file needs to be present in 
 1. the dags main folder
