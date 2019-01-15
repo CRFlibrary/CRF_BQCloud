@@ -64,7 +64,7 @@ class _OracleSource(iobase.BoundedSource):
         # Prepare query
         self._query = query
         if not self._query:
-            self._query = {}
+            self._query = ''
 
     @property
     def client(self):
