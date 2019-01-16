@@ -287,7 +287,7 @@ This collects argumnets from the user and inputs the same for the Beam batch pro
 ####  1.4.4. <a name='Calltofile-1'></a>Call to file
 
 ```
-python ddl_main.py --< parameter name 1> < parameter value 1> --< parameter name 2> < parameter value 3>
+python orclbm_main.py --< parameter name 1> < parameter value 1> --< parameter name 2> < parameter value 3>
 
 ```
 Post completion of both steps now we know that both ddl and data transfer works now we connect to airflow. For airflow we need t change the codes a little bit which we will come to in due course.
