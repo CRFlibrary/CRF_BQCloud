@@ -919,7 +919,7 @@ def ddlrun(args):
 	out_f = None
 	out_fn = args.out
 	if out_fn:
-		if '--date-dir' in sys.argv:
+		if args.date-dir:
 			os.mkdir(SCHEMA_DIR)
 			out_fn = os.path.join(SCHEMA_DIR, out_fn)
 		out_f = open(out_fn, 'w')
