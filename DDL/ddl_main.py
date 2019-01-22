@@ -13,6 +13,7 @@ if __name__ == '__main__':
     parser.add_argument('--connect_string' ,dest='connect_string',default="orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL" ,help='Path to google creds')
     parser.add_argument('--username' ,dest='username' ,default="GL" ,help='GCP project name')
     parser.add_argument('--passwd' ,dest='passwd' ,default="GL" ,help='BigQuery Dataset name')
+    parser.add_argument('--date_dir' ,dest='date_dir' ,default=False ,help='Oracle connection string')
     parser.add_argument('--separate_files' ,dest='separate_files' ,default=True ,help='BigQuery table name')
     parser.add_argument('--forcedir' ,dest='forcedir' ,default=True ,help='Oracle connection string')
     parser.add_argument('--out' ,dest='out' ,default='file.out' ,help='runner to use DirectRunner or DataflowRunner')
