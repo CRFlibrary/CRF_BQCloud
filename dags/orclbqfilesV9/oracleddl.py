@@ -879,29 +879,29 @@ def get_option_value(prefix):
 
 
 def alt_or_create_tbl(fname,tname,project,dataset_id,tql):
-    with open(fname) as f:
-        lines = f.readlines()
-    indices = [i for i, x in enumerate(lines) if tname.lower() in x.lower()]
-    client = bigquery.Client()
-    trgtschema=[]
-    if tql:
-        for i in range((indices[1]+1),indices[2]):
-            col = lines[i].strip()
-            if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
-                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
-            elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
-                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
-            elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
-                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
-            elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
+	with open(fname) as f:
+		lines = f.readlines()
+	indices = [i for i, x in enumerate(lines) if tname.lower() in x.lower()]
+	client = bigquery.Client()
+	trgtschema=[]
+	if tql:
+		for i in range((indices[1]+1),indices[2]):
+			col = lines[i].strip()
+			if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
 				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
-            elif ("VARCHAR" in col and "NOT NULL" in col):
+			elif ("VARCHAR" in col and "NOT NULL" in col):
 				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
-            elif ("VARCHAR" in col and "NOT NULL" not in col):
+			elif ("VARCHAR" in col and "NOT NULL" not in col):
 				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
-            elif ("DATE" in col and "NOT NULL" in col):
+			elif ("DATE" in col and "NOT NULL" in col):
 				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
-            elif ("DATE" in col and "NOT NULL" not in col):
+			elif ("DATE" in col and "NOT NULL" not in col):
 				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
 	else:
 		for i in range((indices[0]+1),indices[1]):
@@ -935,7 +935,7 @@ def alt_or_create_tbl(fname,tname,project,dataset_id,tql):
 	return (table.table_id == tname)
 
 def main(args):
-    """main function"""
+	"""main function"""
 	connect_string=args.connect_string
 	username = args.username
 	passwd = args.passwd
@@ -981,24 +981,24 @@ def main(args):
 
 
 if __name__ == '__main__':
-    #enter google project details
-    parser = argparse.ArgumentParser()
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--connect_string' ,dest='connect_string',default="159.65.85.83:1521/VIS" ,help='Path to google creds')
-    parser.add_argument('--username' ,dest='username' ,default="GL" ,help='GCP project name')
-    parser.add_argument('--passwd' ,dest='passwd' ,default="GL" ,help='BigQuery Dataset name')
-    parser.add_argument('--date_dir' ,dest='date_dir' ,default=False ,help='Oracle connection string')
-    parser.add_argument('--separate_files' ,dest='separate_files' ,default=True ,help='BigQuery table name')
-    parser.add_argument('--forcedir' ,dest='forcedir' ,default=True ,help='Oracle connection string')
-    parser.add_argument('--out' ,dest='out' ,default='file.out' ,help='runner to use DirectRunner or DataflowRunner')
-    parser.add_argument('--addverinfo' ,dest='addverinfo' ,default=False ,help='set up file for workers')
-    parser.add_argument('--alterbq' ,dest='alterbq' ,default=True ,help='save main session')
-    parser.add_argument('--gcred' ,dest='gcred' ,default="BeamProjectV1-48b0a434a29a.json" ,help='name of dataflow job')
-    parser.add_argument('--tables_only' ,dest='tables_only' ,default=True ,help='name of dataflow job')
-    parser.add_argument('--gcp' ,dest='gcp' ,default="beamprojectv1" ,help='save main session')
-    parser.add_argument('--dtst' ,dest='dtst' ,default="AWSRDS_GL" ,help='name of dataflow job')
-    parser.add_argument('--tname' ,dest='tname' ,default="GL_JE_LINES" ,help='name of dataflow job')
-    args = parser.parse_args()
-    main(args)
-        
-        
+	#enter google project details
+	parser = argparse.ArgumentParser()
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--connect_string' ,dest='connect_string',default="159.65.85.83:1521/VIS" ,help='Path to google creds')
+	parser.add_argument('--username' ,dest='username' ,default="GL" ,help='GCP project name')
+	parser.add_argument('--passwd' ,dest='passwd' ,default="GL" ,help='BigQuery Dataset name')
+	parser.add_argument('--date_dir' ,dest='date_dir' ,default=False ,help='Oracle connection string')
+	parser.add_argument('--separate_files' ,dest='separate_files' ,default=True ,help='BigQuery table name')
+	parser.add_argument('--forcedir' ,dest='forcedir' ,default=True ,help='Oracle connection string')
+	parser.add_argument('--out' ,dest='out' ,default='file.out' ,help='runner to use DirectRunner or DataflowRunner')
+	parser.add_argument('--addverinfo' ,dest='addverinfo' ,default=False ,help='set up file for workers')
+	parser.add_argument('--alterbq' ,dest='alterbq' ,default=True ,help='save main session')
+	parser.add_argument('--gcred' ,dest='gcred' ,default="BeamProjectV1-48b0a434a29a.json" ,help='name of dataflow job')
+	parser.add_argument('--tables_only' ,dest='tables_only' ,default=True ,help='name of dataflow job')
+	parser.add_argument('--gcp' ,dest='gcp' ,default="beamprojectv1" ,help='save main session')
+	parser.add_argument('--dtst' ,dest='dtst' ,default="AWSRDS_GL" ,help='name of dataflow job')
+	parser.add_argument('--tname' ,dest='tname' ,default="GL_JE_LINES" ,help='name of dataflow job')
+	args = parser.parse_args()
+	main(args)
+
+
