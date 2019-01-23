@@ -1,0 +1,7 @@
+CREATE TABLE gl_ahm_export_2_gt (
+	 parent_flex_value VARCHAR2 (60) NOT NULL
+	,flex_value VARCHAR2 (150) NOT NULL
+	,description VARCHAR2 (240)
+);
+
+CREATE  INDEX GL_AHM_EXPORT_2_GT_N1 ON GL_AHM_EXPORT_2_GT (PARENT_FLEX_VALUE);

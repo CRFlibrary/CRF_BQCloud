@@ -835,7 +835,7 @@ def clean_up():
 	os.rmdir(SCHEMA_DIR)
 
 
-def dump_db_info(separate_files, out_f, stdout):
+def dump_db_info(separate_files, out_f, stdout,tables_only,T_NAMES_SQL):
 	"""saves information about database schema in file/files"""
 	test = '--test' in sys.argv
 	if test or separate_files:
@@ -844,10 +844,14 @@ def dump_db_info(separate_files, out_f, stdout):
 
 		if not test:
 			sorted_in_comment = '--sorted-info' in sys.argv
-			rs = select_qry(TABLE_NAMES_SQL)
+			if tables_only:
+				rs = select_qry(T_NAMES_SQL)
+			else:
+				rs = select_qry(TABLE_NAMES_SQL)
 			if rs:
 				for row in rs:
 					table = row[0]
+					print(table)
 					save_table_definition(table, sorted_in_comment)
 	else:
 		show_tables()
@@ -859,6 +863,7 @@ def dump_db_info(separate_files, out_f, stdout):
 		sys.stdout = stdout
 	if '--zip' in sys.argv:
 		save_files_in_zip()
+
 
 
 def get_option_value(prefix):
@@ -873,95 +878,126 @@ def get_option_value(prefix):
 
 
 
-def alt_or_create_tbl(fname,tname,project,dataset_id):
+def alt_or_create_tbl(fname,tname,project,dataset_id,tql):
     with open(fname) as f:
         lines = f.readlines()
     indices = [i for i, x in enumerate(lines) if tname.lower() in x.lower()]
     client = bigquery.Client()
     trgtschema=[]
-    for i in range((indices[0]+1),indices[1]):
-        col = lines[i].strip()
-        if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
-        elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
-        elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
-        elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
-        elif ("VARCHAR" in col and "NOT NULL" in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
-        elif ("VARCHAR" in col and "NOT NULL" not in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
-        elif ("DATE" in col and "NOT NULL" in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
-        elif ("DATE" in col and "NOT NULL" not in col):
-            trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
-    dataset_ref = client.dataset('AWSRDS_GL')    
-    table_ref = dataset_ref.table(tname)
-    try:
-        table = client.get_table(table_ref)
-        table.schema = trgtschema
-        table = client.update_table(table, ['schema'])
-    except:
-        table = bigquery.Table(table_ref, schema=trgtschema)
-        table = client.create_table(table)
-    return (table.table_id == tname)
+    if tql:
+        for i in range((indices[1]+1),indices[2]):
+            col = lines[i].strip()
+            if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
+                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
+            elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
+                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
+            elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
+                trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
+            elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
+            elif ("VARCHAR" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
+            elif ("VARCHAR" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
+            elif ("DATE" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
+            elif ("DATE" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
+	else:
+		for i in range((indices[0]+1),indices[1]):
+			col = lines[i].strip()
+			if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
+			elif ("VARCHAR" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
+			elif ("VARCHAR" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
+			elif ("DATE" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
+			elif ("DATE" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
+	dataset_ref = client.dataset('AWSRDS_GL')
+	table_ref = dataset_ref.table(tname)
+	try:
+		table = client.get_table(table_ref)
+		table.schema = trgtschema
+		table = client.update_table(table, ['schema'])
+	except Exception as e:
+		print(str(e))
+		table = bigquery.Table(table_ref, schema=trgtschema)
+		table = client.create_table(table)
+	return (table.table_id == tname)
 
 def main(args):
     """main function"""
-    connect_string=args.connect_string
-    username = args.username
-    passwd = args.passwd
-    if args.separate_files:
-        if os.path.exists(SCHEMA_DIR):
-            if not args.forcedir:
-                print_err('Output directory "%s" already exists,\nuse --force-dir or --date-dir option!' % (SCHEMA_DIR))
-                return 0
-    stdout = sys.stdout
-    out_f = None
-    out_fn = args.out
-    if out_fn:
-        if args.datedir:
-            os.mkdir(SCHEMA_DIR)
-            out_fn = os.path.join(SCHEMA_DIR, out_fn)
-    out_f = open(out_fn, 'w')
-    sys.stdout = out_f
-    CREATED_FILES.append(out_fn)
-    if not init_db_conn(connect_string, username, passwd):
-        print_err('Something is terribly wrong with db connection')
-        return 0
-    init_session()
-    if args.addverinfo:
-        add_ver_info(args.separate_files, connect_string, username)
-    dump_db_info(args.separate_files, out_f, stdout)
-    if args.alterbq:
-        print("inBQ")
-        project = args.gcp
-        dataset_id = args.dtst
-        tname  = args.tname
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=args.gcred
-        res = alt_or_create_tbl(out_fn,tname,project,dataset_id)
-        print(res)
+	connect_string=args.connect_string
+	username = args.username
+	passwd = args.passwd
+	if args.separate_files and os.path.exists(SCHEMA_DIR) and not args.forcedir:
+		print_err('Output directory "%s" already exists,\nuse --force-dir or --date-dir option!' % (SCHEMA_DIR))
+		return 0
+	stdout = sys.stdout
+	out_f = None
+	out_fn = args.out
+	if out_fn:
+		if args.date_dir:
+			os.mkdir(SCHEMA_DIR)
+			out_fn = os.path.join(SCHEMA_DIR, out_fn)
+		out_f = open(out_fn, 'w')
+		sys.stdout = out_f
+		CREATED_FILES.append(out_fn)
+
+	if not init_db_conn(connect_string, username, passwd):
+		print_err('Something is terribly wrong with db connection')
+		return 0
+	init_session()
+	if args.addverinfo:
+		add_ver_info(args.separate_files, connect_string, username)
+	if args.tables_only:
+		T_NAMES_SQL = """SELECT DISTINCT table_name
+		FROM user_tables
+		WHERE INSTR(table_name, 'X_') <> 1
+		AND INSTR(table_name, '$') = 0
+		AND NOT table_name IN (SELECT view_name FROM user_views)
+		AND NOT table_name IN (SELECT mview_name FROM user_mviews)
+		AND table_name = '""" + args.tname + """'
+		ORDER BY table_name
+		"""
+	dump_db_info(args.separate_files, out_f, stdout,args.tables_only,T_NAMES_SQL)
+	if args.alterbq:
+		print("inBQ")
+		project = args.gcp
+		dataset_id = args.dtst
+		tname  = args.tname
+		os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=args.gcred
+		res = alt_or_create_tbl(out_fn,tname,project,dataset_id,args.tables_only)
+		print(res)
 
 
 if __name__ == '__main__':
     #enter google project details
     parser = argparse.ArgumentParser()
-    parser.add_argument('--connect_string',dest='connect_string',default="orcl.c7y14itdrmil.eu-west-1.rds.amazonaws.com:1521/ORCL",help='Path to google creds')
-    parser.add_argument('--username',dest='username',default="GL",help='GCP project name')
-    parser.add_argument('--passwd',dest='passwd',default="GL",help='BigQuery Dataset name')
-    parser.add_argument('--separate_files',dest='separate_files',default=True,help='BigQuery table name')
-    parser.add_argument('--forcedir',dest='forcedir',default=True,help='Oracle connection string')
-    parser.add_argument('--datedir',dest='datedir',default=False,help='Oracle connection string')
-    parser.add_argument('--out',dest='out',default='file.out',help='runner to use DirectRunner or DataflowRunner')
-    parser.add_argument('--addverinfo',dest='addverinfo',default=False,help='set up file for workers')
-    parser.add_argument('--alterbq',dest='alterbq',default=True,help='save main session')
-    parser.add_argument('--gcred',dest='gcred',default="/home/abhishek/airflow/dags/BeamProjectV1-48b0a434a29a.json",help='name of dataflow job')
-    parser.add_argument('--tables_only',dest='tables_only',default=False,help='name of dataflow job')
-    parser.add_argument('--gcp',dest='gcp',default="beamprojectv1",help='save main session')
-    parser.add_argument('--dtst',dest='dtst',default="AWSRDS_GL",help='name of dataflow job')
-    parser.add_argument('--tname',dest='tname',default="GL_JE_LINES",help='name of dataflow job')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--connect_string' ,dest='connect_string',default="159.65.85.83:1521/VIS" ,help='Path to google creds')
+    parser.add_argument('--username' ,dest='username' ,default="GL" ,help='GCP project name')
+    parser.add_argument('--passwd' ,dest='passwd' ,default="GL" ,help='BigQuery Dataset name')
+    parser.add_argument('--date_dir' ,dest='date_dir' ,default=False ,help='Oracle connection string')
+    parser.add_argument('--separate_files' ,dest='separate_files' ,default=True ,help='BigQuery table name')
+    parser.add_argument('--forcedir' ,dest='forcedir' ,default=True ,help='Oracle connection string')
+    parser.add_argument('--out' ,dest='out' ,default='file.out' ,help='runner to use DirectRunner or DataflowRunner')
+    parser.add_argument('--addverinfo' ,dest='addverinfo' ,default=False ,help='set up file for workers')
+    parser.add_argument('--alterbq' ,dest='alterbq' ,default=True ,help='save main session')
+    parser.add_argument('--gcred' ,dest='gcred' ,default="BeamProjectV1-48b0a434a29a.json" ,help='name of dataflow job')
+    parser.add_argument('--tables_only' ,dest='tables_only' ,default=True ,help='name of dataflow job')
+    parser.add_argument('--gcp' ,dest='gcp' ,default="beamprojectv1" ,help='save main session')
+    parser.add_argument('--dtst' ,dest='dtst' ,default="AWSRDS_GL" ,help='name of dataflow job')
+    parser.add_argument('--tname' ,dest='tname' ,default="GL_JE_LINES" ,help='name of dataflow job')
     args = parser.parse_args()
     main(args)
         
