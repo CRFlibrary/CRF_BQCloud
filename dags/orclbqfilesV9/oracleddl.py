@@ -887,43 +887,43 @@ def alt_or_create_tbl(fname,tname,project,dataset_id,tql,gcredpath):
 	client = bigquery.Client()
 	trgtschema=[]
 	if tql:
-			for i in range((indices[1]+1),indices[2]):
-				col = lines[i].strip()
-				if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
-				elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
-				elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
-				elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
-				elif ("VARCHAR" in col and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
-				elif ("VARCHAR" in col and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
-				elif ("DATE" in col and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
-				elif ("DATE" in col and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
+		for i in range((indices[1]+1),indices[2]):
+			col = lines[i].strip()
+			if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
+			elif ("VARCHAR" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
+			elif ("VARCHAR" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
+			elif ("DATE" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
+			elif ("DATE" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
 	else:
-			for i in range((indices[0]+1),indices[1]):
-				col = lines[i].strip()
-				if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
-				elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
-				elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
-				elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
-				elif ("VARCHAR" in col and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
-				elif ("VARCHAR" in col and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
-				elif ("DATE" in col and "NOT NULL" in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
-				elif ("DATE" in col and "NOT NULL" not in col):
-					trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
+		for i in range((indices[0]+1),indices[1]):
+			col = lines[i].strip()
+			if ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='REQUIRED'))
+			elif ("NUMBER" in col and col.find("0)") >= 0 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="INTEGER",mode='NULLABLE'))
+			elif ("NUMBER" in col and col.find("0)") == -1 and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="FLOAT",mode='NULLABLE'))
+			elif ("VARCHAR" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='REQUIRED'))
+			elif ("VARCHAR" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="STRING",mode='NULLABLE'))
+			elif ("DATE" in col and "NOT NULL" in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='REQUIRED'))
+			elif ("DATE" in col and "NOT NULL" not in col):
+				trgtschema.append(bigquery.SchemaField(name=col.split()[0].replace(",",""),field_type="DATE",mode='NULLABLE'))
 	dataset_ref = client.dataset('AWSRDS_GL')
 	table_ref = dataset_ref.table(tname)
 	try:
