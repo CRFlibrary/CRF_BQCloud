@@ -35,23 +35,25 @@ dag = DAG(
  default_args=default_args
 )
 
+
+ddldict={"--connect_string": "159.65.85.83:1521/VIS",
+            "--username":"GL",
+            "--passwd":"GL",
+            "--separate_files":True,
+            "--forcedir":True,
+            "--datedir":False,
+            "--out":"file.out",
+            "--addverinfo":False,
+            "--alterbq":True,
+            "--gcred":"/home/abhishek/airflow/dags/BeamProjectV1-48b0a434a29a.json",
+            "--tables_only":True,
+            "--gcp": "beamprojectv1",
+            "--dtst": "AWSRDS_GL",
+            "--tname": "GL_JE_LINES"}
+bashargs = str(ddldict).replace(":", "").replace(",", "").replace("}", "").replace("{", "").replace("'","")
 run_DDL = BashOperator(
     task_id='createtabledefn',
-    bash_command="python /home/abhishek/airflow/dags/orclbqfilesV9/oracleddl.py",
-    params = {"connect_string": "159.65.85.83:1521/VIS",
-            "username":"GL",
-            "passwd":"GL",
-            "separate_files":True,
-            "forcedir":True,
-            "datedir":False,
-            "out":"file.out",
-            "addverinfo":False,
-            "alterbq":True,
-            "gcred":"/home/abhishek/airflow/dags/BeamProjectV1-48b0a434a29a.json",
-            "tables_only":True,
-            "gcp": "beamprojectv1",
-            "dtst": "AWSRDS_GL",
-            "tname": "GL_JE_LINES"},
+    bash_command="python /home/abhishek/airflow/dags/orclbqfilesV9/oracleddl.py "+bashargs,
     dag=dag,
 )
 
