@@ -30,6 +30,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import GoogleCloudOptions
 from apache_beam.options.pipeline_options import StandardOptions
 from apache_beam.options.pipeline_options import SetupOptions
+from apache_beam.options.pipeline_options import WorkerOptions
 from apache_beam.transforms import PTransform#, ParDo, DoFn, Create
 from apache_beam.io import iobase, range_trackers
 import os
@@ -258,7 +259,11 @@ def run(args):
     google_cloud_options.staging_location = args.gbstaging
     google_cloud_options.temp_location = args.gbtemp
     #google_cloud_options.template_location = args.gbtemplate
-    options.view_as(StandardOptions).runner = args.runner#'DataflowRunner'#DirectRunner
+    options.view_as(WorkerOptions).runner = args.runner#'DataflowRunner'#DirectRunner
+    if (args.runner == 'DataflowRunner' ):
+        options.view_as(StandardOptions).num_workers = args.numwork
+        options.view_as(StandardOptions).autoscaling_algorithm = args.autoscale
+        options.view_as(StandardOptions).max_num_workers = args.maxnumwork
     options.view_as(SetupOptions).save_main_session= args.savesess
     options.view_as(SetupOptions).setup_file= args.setup
     with beam.Pipeline(options=options) as pipeline:

@@ -71,18 +71,17 @@ class build(_build):  # pylint: disable=invalid-name
 # The output of custom commands (including failures) will be logged in the
 # worker-startup log.
 CUSTOM_COMMANDS = [
-    ['sudo','apt-get', 'update'],
-    ['sudo','mkdir','-p','/opt/oracle'],
-    ['sudo','apt-get','--assume-yes','install','unzip'],
-    ['wget','https://storage.googleapis.com/facbeambucketv1/files/instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
-    ['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip', '-d' ,'/opt/oracle'],
-    ['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
-    ['sudo','apt-get','--assume-yes','install','libaio1'],
-    ['echo','"export', 'LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3"', '>>','/etc/environment'],
-    ['echo','"export', 'LD_LIBRARY_PATH=/opt/oracle/instantclient_18_3"', '>>','~/.bashrc'],
-    ['printenv'],
-    ['echo','itworked']
+['sudo','apt-get', 'update'],
+['sudo','mkdir','-p','/opt/oracle'],
+['sudo','apt-get','--assume-yes','install','unzip'],
+['wget','https://storage.googleapis.com/crfbeamstoragebucket/instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
+['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip', '-d' ,'/opt/oracle'],
+['sudo','unzip','-o', 'instantclient-basic-linux.x64-18.3.0.0.0dbru.zip'],
+['sudo','apt-get','--assume-yes','install','libaio1'],
+['sudo','sh','-c','echo "/opt/oracle/instantclient_18_3" > /etc/ld.so.conf.d/oracle-instantclient.conf'],
+['sudo','ldconfig'],
 ]
+
 #CUSTOM_COMMANDS = [
 #    ['apt-get', 'update'],
 #    ['apt-get', '--assume-yes', 'install', 'libmysqlclient-dev'],

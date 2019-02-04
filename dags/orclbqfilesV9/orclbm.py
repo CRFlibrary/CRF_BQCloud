@@ -228,7 +228,7 @@ def transform_doc(document,tableschema):
     
     
     
-def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,savesess,setup):
+def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,numwork,autoscale,maxnumwork,savesess,setup):
     """
     run method
         :param args: 
@@ -259,6 +259,10 @@ def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,sav
     google_cloud_options.temp_location = gbtemp
     #google_cloud_options.template_location = args.gbtemplate
     options.view_as(StandardOptions).runner = runner#'DataflowRunner'#DirectRunner
+    if (runner == 'DataflowRunner' ):
+        options.view_as(StandardOptions).num_workers = numwork
+        options.view_as(StandardOptions).autoscaling_algorithm = autoscale
+        options.view_as(StandardOptions).max_num_workers = maxnumwork
     options.view_as(SetupOptions).save_main_session= savesess
     options.view_as(SetupOptions).setup_file= setup
     with beam.Pipeline(options=options) as pipeline:
