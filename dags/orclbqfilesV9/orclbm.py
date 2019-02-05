@@ -30,6 +30,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import GoogleCloudOptions
 from apache_beam.options.pipeline_options import StandardOptions
 from apache_beam.options.pipeline_options import SetupOptions
+from apache_beam.options.pipeline_options import WorkerOptions
 from apache_beam.transforms import PTransform#, ParDo, DoFn, Create
 from apache_beam.io import iobase, range_trackers
 import cx_Oracle
@@ -64,7 +65,7 @@ class _OracleSource(iobase.BoundedSource):
         # Prepare query
         self._query = query
         if not self._query:
-            self._query = {}
+            self._query = ""
 
     @property
     def client(self):
@@ -116,7 +117,7 @@ class _OracleSource(iobase.BoundedSource):
             :param range_tracker: 
         """
         cur = self.client.cursor()
-        cur.execute('select * from '+ self._table)
+        cur.execute('select '+ self.field +' from '+ self._table + self.query)
         for row in cur:
             yield row
 
@@ -228,7 +229,7 @@ def transform_doc(document,tableschema):
     
     
     
-def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,numwork,autoscale,maxnumwork,savesess,setup):
+def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,numwork,autoscale,maxnumwork,savesess,setup,oquery,ofields):
     """
     run method
         :param args: 
@@ -260,14 +261,14 @@ def runbeampipe(gcred,bqds,bqtbl,bqpid,orclcn,gdfjob,gbstaging,gbtemp,runner,num
     #google_cloud_options.template_location = args.gbtemplate
     options.view_as(StandardOptions).runner = runner#'DataflowRunner'#DirectRunner
     if (runner == 'DataflowRunner' ):
-        options.view_as(StandardOptions).num_workers = numwork
-        options.view_as(StandardOptions).autoscaling_algorithm = autoscale
-        options.view_as(StandardOptions).max_num_workers = maxnumwork
+        options.view_as(WorkerOptions).num_workers = numwork
+        options.view_as(WorkerOptions).autoscaling_algorithm = autoscale
+        options.view_as(WorkerOptions).max_num_workers = maxnumwork
     options.view_as(SetupOptions).save_main_session= savesess
     options.view_as(SetupOptions).setup_file= setup
     with beam.Pipeline(options=options) as pipeline:
         (pipeline
-         | 'read' >> ReadFromOracle(connection_string, bqds, bqtbl, query={}, fields=[])
+         | 'read' >> ReadFromOracle(connection_string, bqds, bqtbl, query=oquery, fields=ofields)
          | 'transform' >> beam.Map(transform_doc,table.schema)
          | 'WriteToBigQuery' >> beam.io.WriteToBigQuery(table_spec,
                                                         schema=table_schema,
