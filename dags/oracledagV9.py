@@ -72,7 +72,9 @@ run_DT = PythonOperator(
             "gdfjob":"myjob",
             "gcred":"/home/swapnil_keshetty/airflow/dags/setupcrf-6da795b61160.json",
             "gbstaging":"gs://crfbeamstoragebucket/staging",
-            "gbtemp":"gs://tempstoragebucket/temp"},
+            "gbtemp":"gs://tempstoragebucket/temp",
+            "oquery":"",
+            "ofields":"*"},
     dag=dag,
 )
 
