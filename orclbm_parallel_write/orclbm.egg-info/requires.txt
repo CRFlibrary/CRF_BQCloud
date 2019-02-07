@@ -1,0 +1,6 @@
+numpy
+apache_beam
+apache_beam[gcp]
+cx_Oracle
+datetime
+google-cloud-bigquery<1.7.0,>1.6.0
