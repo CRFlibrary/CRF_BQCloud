@@ -84,7 +84,7 @@ pbr==5.1.1
 pendulum==1.4.4
 proto-google-cloud-datastore-v1==0.90.4
 protobuf==3.6.1
-psutil==4.4.2
+psutil==5.6.6
 pyasn1==0.4.5
 pyasn1-modules==0.2.3
 pycparser==2.19
