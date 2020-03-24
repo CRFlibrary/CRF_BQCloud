@@ -4,7 +4,7 @@ apache-beam==2.9.0
 asn1crypto==0.24.0
 avro==1.8.2
 Babel==2.6.0
-bleach==2.1.4
+bleach==3.1.2
 boto==2.44.0
 cachetools==3.0.0
 certifi==2018.11.29
