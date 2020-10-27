@@ -15,7 +15,7 @@ colorama==0.4.1
 configparser==3.5.0
 crcmod==1.7
 croniter==0.3.26
-cryptography==2.4.2
+cryptography==3.2
 cx-Oracle==7.0.0
 DateTime==4.3
 dill==0.2.8.2
