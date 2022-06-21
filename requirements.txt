@@ -74,7 +74,7 @@ Markdown==2.6.11
 MarkupSafe==1.1.0
 mock==2.0.0
 monotonic==1.5
-numpy==1.15.4
+numpy==1.22.0
 oauth2client==3.0.0
 oauthlib==3.0.0
 ordereddict==1.1
